@@ -104,7 +104,8 @@ namespace _02
                     second = true;
                 }
 
-                if ((first && !second) || (!first && second))
+                // XOR
+                if (first ^ second)
                 {
                     valid++;
                 }
