@@ -19,7 +19,9 @@ namespace _10
             //var example = FileSystem.GetInput($"{fileName}-example");
             //var example1Result = SolveA(example);
             //var example2Result = SolveB(example);
-            
+
+            // 32 396 521 357 312
+            // 32 trillion
             var result2 = SolveB(content);
             Console.WriteLine($"Result b: " + result2);
             Console.Read();
