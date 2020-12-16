@@ -10,10 +10,10 @@ namespace Solutions
         public string DayNumber { get; }
         public List<string> Content { get; }
 
-        protected DayBase(string dayNumber)
+        protected DayBase(string dayNumberAsString)
         {
-            DayNumber = dayNumber;
-            Content = FileSystem.GetInput(dayNumber);
+            DayNumber = dayNumberAsString;
+            Content = FileSystem.GetInput(dayNumberAsString);
         }
 
         public abstract int SolveA();

@@ -8,9 +8,10 @@ namespace Solutions
     {
         static void Main(string[] args)
         {
-            var solution = new Day12();
+            //var solution = new Day12();
             //var solution = new Day13();
             //var solution = new Day14();
+            var solution = new Day15();
 
 
 

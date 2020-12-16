@@ -25,7 +25,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "04", "04\04.csproj", "{7393
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "11", "11\11.csproj", "{6556884E-E8E3-4DF2-AF0F-FAC55CA7C388}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Solutions", "Solutions\Solutions.csproj", "{D57C352A-2A01-40CE-88B3-7A60711BA322}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Solutions", "Solutions\Solutions.csproj", "{D57C352A-2A01-40CE-88B3-7A60711BA322}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
