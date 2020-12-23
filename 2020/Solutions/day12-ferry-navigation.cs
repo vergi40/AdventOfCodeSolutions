@@ -9,7 +9,7 @@ namespace Solutions
         {
         }
 
-        public override int SolveA()
+        public override long SolveA()
         {
             var instructions = ParseContent();
             var ferry = new Ferry();
@@ -114,7 +114,7 @@ namespace Solutions
             }
         }
 
-        public override int SolveB()
+        public override long SolveB()
         {
             var instructions = ParseContent();
             var ferry = new Ferry();

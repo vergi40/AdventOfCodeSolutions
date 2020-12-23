@@ -12,7 +12,7 @@ namespace Solutions
         {
         }
 
-        public override int SolveA()
+        public override long SolveA()
         {
             var earliest = int.Parse(Content[0]);
             var buses = Content[1].Split(',').Where(b => b != "x").Select(int.Parse).ToList();
@@ -38,7 +38,7 @@ namespace Solutions
             return smallestDifference * best;
         }
 
-        public override int SolveB()
+        public override long SolveB()
         {
             // 100 000 000 000 000
             var line = Content[1];
@@ -90,7 +90,7 @@ namespace Solutions
                 }
             }
 
-            return 0;
+            return departure;
         }
 
         public int SolveBOld()

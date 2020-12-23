@@ -16,8 +16,8 @@ namespace Solutions
             Content = FileSystem.GetInput(dayNumberAsString);
         }
 
-        public abstract int SolveA();
+        public abstract long SolveA();
 
-        public abstract int SolveB();
+        public abstract long SolveB();
     }
 }

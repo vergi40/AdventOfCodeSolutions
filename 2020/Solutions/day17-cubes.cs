@@ -12,7 +12,7 @@ namespace Solutions
         {
         }
 
-        public override int SolveA()
+        public override long SolveA()
         {
             var startMaxY = Content.Count;
             var startMaxX = Content.First().Length;
@@ -177,7 +177,7 @@ namespace Solutions
         record Pos4(int X, int Y, int Z, int W);
         
         
-        public override int SolveB()
+        public override long SolveB()
         {
             var startMaxY = Content.Count;
             var startMaxX = Content.First().Length;

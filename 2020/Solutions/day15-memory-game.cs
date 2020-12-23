@@ -11,7 +11,7 @@ namespace Solutions
         {
         }
 
-        public override int SolveA()
+        public override long SolveA()
         {
             var line = Content.First();
             //line = "0,3,6";
@@ -45,7 +45,7 @@ namespace Solutions
             return numbers.Last();
         }
 
-        public override int SolveB()
+        public override long SolveB()
         {
             var line = Content.First();
             //line = "0,3,6";

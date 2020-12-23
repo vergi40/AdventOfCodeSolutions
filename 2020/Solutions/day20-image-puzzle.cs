@@ -13,7 +13,7 @@ namespace Solutions
         {
         }
 
-        public override int SolveA()
+        public override long SolveA()
         {
             var tiles = new List<Tile>();
             var tileContent = new List<string>();
@@ -82,7 +82,7 @@ namespace Solutions
                 result *= corner.IdToInt;
             }
 
-            return 0;
+            return result;
         }
 
         class Tile
@@ -176,7 +176,7 @@ namespace Solutions
             }
         }
 
-        public override int SolveB()
+        public override long SolveB()
         {
             return 0;
         }
