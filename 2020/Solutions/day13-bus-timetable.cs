@@ -120,7 +120,7 @@ namespace Solutions
             long departure = step;
             var found = false;
 
-            var highestModuloDeciderIndex = 0;
+            //var highestModuloDeciderIndex = 0;
             
             while (true)
             {

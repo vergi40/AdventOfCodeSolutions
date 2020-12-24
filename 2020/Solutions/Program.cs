@@ -8,6 +8,12 @@ namespace Solutions
     {
         static void Main(string[] args)
         {
+            //var solution = new Day01();
+            //var solution = new Day02();
+            //var solution = new Day03();
+            //var solution = new Day04();
+            //var solution = new Day10();
+            //var solution = new Day11();
             //var solution = new Day12();
             //var solution = new Day13();
             //var solution = new Day14();

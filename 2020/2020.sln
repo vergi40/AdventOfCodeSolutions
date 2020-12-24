@@ -3,27 +3,29 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30709.132
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "01", "01\01.csproj", "{26255DA0-E7FB-44DE-8732-F982752C0653}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "02", "02\02.csproj", "{02A97E06-304D-4EB3-8EA8-E9AE79909C44}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Common\Common.csproj", "{C5D6FB56-6CD9-4C91-8BF2-D7E1B4D40F07}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "03", "03\03.csproj", "{8809CEEC-CA2B-4E48-9707-C7C944216FA8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Resources", "Resources", "{7E829880-843A-45F2-A533-85726C455ED5}"
 	ProjectSection(SolutionItems) = preProject
+		Resources\01.txt = Resources\01.txt
+		Resources\02.txt = Resources\02.txt
 		Resources\03-example.txt = Resources\03-example.txt
 		Resources\03.txt = Resources\03.txt
+		Resources\04.txt = Resources\04.txt
+		Resources\07.txt = Resources\07.txt
 		10-example.txt = 10-example.txt
+		Resources\10-example.txt = Resources\10-example.txt
 		Resources\10.txt = Resources\10.txt
+		Resources\11.txt = Resources\11.txt
+		Resources\12.txt = Resources\12.txt
+		Resources\13.txt = Resources\13.txt
+		Resources\15.txt = Resources\15.txt
+		Resources\17-example.txt = Resources\17-example.txt
+		Resources\17.txt = Resources\17.txt
+		Resources\18.txt = Resources\18.txt
+		Resources\20.txt = Resources\20.txt
+		Resources\21.txt = Resources\21.txt
 	EndProjectSection
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "10", "10\10.csproj", "{F9EF8134-F831-411E-BA22-898C22B41937}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "04", "04\04.csproj", "{73934F1A-EFA3-4591-A4EF-72877EB930BB}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "11", "11\11.csproj", "{6556884E-E8E3-4DF2-AF0F-FAC55CA7C388}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Solutions", "Solutions\Solutions.csproj", "{D57C352A-2A01-40CE-88B3-7A60711BA322}"
 EndProject
@@ -33,34 +35,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{26255DA0-E7FB-44DE-8732-F982752C0653}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{26255DA0-E7FB-44DE-8732-F982752C0653}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{26255DA0-E7FB-44DE-8732-F982752C0653}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{26255DA0-E7FB-44DE-8732-F982752C0653}.Release|Any CPU.Build.0 = Release|Any CPU
-		{02A97E06-304D-4EB3-8EA8-E9AE79909C44}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{02A97E06-304D-4EB3-8EA8-E9AE79909C44}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{02A97E06-304D-4EB3-8EA8-E9AE79909C44}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{02A97E06-304D-4EB3-8EA8-E9AE79909C44}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C5D6FB56-6CD9-4C91-8BF2-D7E1B4D40F07}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C5D6FB56-6CD9-4C91-8BF2-D7E1B4D40F07}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C5D6FB56-6CD9-4C91-8BF2-D7E1B4D40F07}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C5D6FB56-6CD9-4C91-8BF2-D7E1B4D40F07}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8809CEEC-CA2B-4E48-9707-C7C944216FA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8809CEEC-CA2B-4E48-9707-C7C944216FA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8809CEEC-CA2B-4E48-9707-C7C944216FA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8809CEEC-CA2B-4E48-9707-C7C944216FA8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F9EF8134-F831-411E-BA22-898C22B41937}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F9EF8134-F831-411E-BA22-898C22B41937}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F9EF8134-F831-411E-BA22-898C22B41937}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F9EF8134-F831-411E-BA22-898C22B41937}.Release|Any CPU.Build.0 = Release|Any CPU
-		{73934F1A-EFA3-4591-A4EF-72877EB930BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{73934F1A-EFA3-4591-A4EF-72877EB930BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{73934F1A-EFA3-4591-A4EF-72877EB930BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{73934F1A-EFA3-4591-A4EF-72877EB930BB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6556884E-E8E3-4DF2-AF0F-FAC55CA7C388}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6556884E-E8E3-4DF2-AF0F-FAC55CA7C388}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6556884E-E8E3-4DF2-AF0F-FAC55CA7C388}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6556884E-E8E3-4DF2-AF0F-FAC55CA7C388}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D57C352A-2A01-40CE-88B3-7A60711BA322}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D57C352A-2A01-40CE-88B3-7A60711BA322}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D57C352A-2A01-40CE-88B3-7A60711BA322}.Release|Any CPU.ActiveCfg = Release|Any CPU
