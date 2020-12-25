@@ -20,7 +20,8 @@ namespace Solutions
             //var solution = new Day15();
             //var solution = new Day17();
             //var solution = new Day20();
-            var solution = new Day21();
+            //var solution = new Day21();
+            var solution = new Day25();
 
 
 
