@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace _2021_AoC
 {
-    internal class _02
+    internal class DayTemplate
     {
     }
 }
