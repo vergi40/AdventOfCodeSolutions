@@ -21,7 +21,7 @@ namespace _2021_AoC
 
             var result2 = ParseLineToLong(Content.First());
 
-            var result3 = ParseInputToLong();
+            var result3 = GetInputAsLongList();
             return result1;
 
             throw new ArgumentException();

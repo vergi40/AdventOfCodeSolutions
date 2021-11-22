@@ -46,7 +46,7 @@ namespace _2021_AoC
             return long.Parse(line);
         }
 
-        protected List<long> ParseInputToLong()
+        protected List<long> GetInputAsLongList()
         {
             var result = new List<long>();
             foreach(var line in Content)
@@ -57,9 +57,20 @@ namespace _2021_AoC
             return result;
         }
 
-        protected long ParseLineToInt(string line)
+        protected int ParseLineToInt(string line)
         {
             return int.Parse(line);
+        }
+
+        protected List<int> GetInputAsIntList()
+        {
+            var result = new List<int>();
+            foreach (var line in Content)
+            {
+                result.Add(ParseLineToInt(line));
+            }
+
+            return result;
         }
     }
 }

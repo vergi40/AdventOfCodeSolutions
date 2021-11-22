@@ -9,6 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Common\Common.csp
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Resources", "Resources", "{776BDA97-C926-4242-8FCF-4DC923DC7221}"
 	ProjectSection(SolutionItems) = preProject
+		Resources\00.txt = Resources\00.txt
 		Resources\01-example.txt = Resources\01-example.txt
 		Resources\01.txt = Resources\01.txt
 		Resources\02.txt = Resources\02.txt
