@@ -25,7 +25,7 @@ namespace _2021_AoC
 
         private void InitializeBase()
         {
-            var content = FileSystem.GetInput(DayNumber);
+            var content = FileSystem.GetInputData(DayNumber);
             if(content != null) Content = content;
         }
 

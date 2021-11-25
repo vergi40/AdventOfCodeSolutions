@@ -14,6 +14,12 @@ namespace _2021_AoC
 
         public override long SolveA()
         {
+            Utils.Say.hello("F# call");
+
+            var filePath = Common.FileSystem.GetInputFilePath("00");
+            Utils.Day00.solve(filePath);
+            Utils.Day00.solveA(filePath);
+
             var exampleInput = new List<int> { 1721, 979, 366, 299, 675, 1456 };
             var exampleResult = 0;
 

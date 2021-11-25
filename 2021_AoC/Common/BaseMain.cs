@@ -9,7 +9,7 @@ namespace Common
         static void Main(string[] args)
         {
             const string fileName = "04";
-            var content = FileSystem.GetInput(fileName);
+            var content = FileSystem.GetInputData(fileName);
 
             var result1 = SolveA(content);
             Console.WriteLine($"Result a: " + result1);

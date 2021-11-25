@@ -20,7 +20,23 @@ namespace Common
             return Path.GetFullPath(solution);
         }
 
-        public static List<string>? GetInput(string fileName)
+        /// <summary>
+        /// From \Resources
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        public static string GetInputFilePath(string fileName)
+        {
+            if (!Path.HasExtension(fileName)) fileName += ".txt";
+            var path = Path.Combine(GetSolutionPath(), "Resources", fileName);
+
+            if (!File.Exists(path)) throw new ArgumentException($"No file {fileName} exists in {path}");
+            return path;
+        }
+
+        
+        public static List<string>? GetInputData(string fileName)
         {
             if (!Path.HasExtension(fileName)) fileName += ".txt";
             var path = Path.Combine(GetSolutionPath(), "Resources", fileName);
