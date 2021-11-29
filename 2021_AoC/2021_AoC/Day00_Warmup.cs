@@ -14,12 +14,6 @@ namespace _2021_AoC
 
         public override long SolveA()
         {
-            Utils.Say.hello("F# call");
-
-            var filePath = Common.FileSystem.GetInputFilePath("00");
-            Utils.Day00.solve(filePath);
-            Utils.Day00.solveA(filePath);
-
             var exampleInput = new List<int> { 1721, 979, 366, 299, 675, 1456 };
             var exampleResult = 0;
 
@@ -31,16 +25,25 @@ namespace _2021_AoC
                 }
             }
 
+            
             var input = GetInputAsIntList();
+
+            // 
+            var (a, b) = ChallengeHelpers.Day00.solveA(input);
+            var fSharpResult = a * b;
+
+            // 
+            var cSharpResult = 0;
             for (var i = 0; i < input.Count - 1; i++)
             {
                 for (var j = i + 1; j < input.Count; j++)
                 {
-                    if (input[i] + input[j] == 2020) return input[i] * input[j];
+                    if (input[i] + input[j] == 2020) cSharpResult = input[i] * input[j];
                 }
             }
 
-            throw new NotImplementedException();
+            Console.WriteLine($"C# result: {cSharpResult}. F# result: {fSharpResult}");
+            return cSharpResult;
         }
 
         public override long SolveB()

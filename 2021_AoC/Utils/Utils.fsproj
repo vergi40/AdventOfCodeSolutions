@@ -6,7 +6,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Library.fs" />
+    <None Include="Interactive.fsx" />
+    <Compile Include="ChallengeHelpers.fs" />
+    <Compile Include="TestLibrary.fs" />
   </ItemGroup>
+
+  <ItemGroup />
 
 </Project>
