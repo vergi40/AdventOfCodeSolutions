@@ -1,8 +1,8 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using _2021_AoC;
 
-var solution = new Day00_Warmup();
-//var solution = new Day01();
+//var solution = new Day00_Warmup();
+var solution = new Day01();
 //var solution = new Day02();
 //var solution = new Day03();
 //var solution = new Day04();

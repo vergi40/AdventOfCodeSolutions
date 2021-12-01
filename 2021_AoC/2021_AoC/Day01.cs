@@ -12,19 +12,42 @@ namespace _2021_AoC
 
         public override long SolveA()
         {
-            return 1;
+            var input = GetInputAsIntList();
+
+            var counter = 0;
+            for(var i = 0; i < input.Count - 1; i++)
+            {
+                var current = input[i];
+                var next = input[i+1];
+
+                if (next > current) counter++;
+            }
+            return counter;
         }
 
         public override long SolveB()
         {
-            var result1 = long.Parse(Content.First());
+            var input = GetInputAsIntList();
 
-            var result2 = ParseLineToLong(Content.First());
+            // Build sums
+            var sums = new List<int>();
+            for (var i = 1; i < input.Count - 1; i++)
+            {
+                var sum = input[i - 1] + input[i] + input[i + 1];
+                sums.Add(sum);
+            }
 
-            var result3 = GetInputAsLongList();
-            return result1;
+            // Compare
+            var counter = 0;
+            for (var i = 0; i < sums.Count - 1; i++)
+            {
+                var current = sums[i];
+                var next = sums[i + 1];
 
-            throw new ArgumentException();
+                if (next > current) counter++;
+            }
+
+            return counter;
         }
     }
 }
