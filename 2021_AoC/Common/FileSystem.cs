@@ -35,7 +35,11 @@ namespace Common
             return path;
         }
 
-        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fileName">E.g. 01 or 01.txt</param>
+        /// <returns></returns>
         public static List<string>? GetInputData(string fileName)
         {
             if (!Path.HasExtension(fileName)) fileName += ".txt";

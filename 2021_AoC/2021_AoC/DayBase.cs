@@ -48,13 +48,7 @@ namespace _2021_AoC
 
         protected List<long> GetInputAsLongList()
         {
-            var result = new List<long>();
-            foreach(var line in Content)
-            {
-                result.Add(ParseLineToLong(line));
-            }
-
-            return result;
+            return Content.Select(s => long.Parse(s)).ToList();
         }
 
         protected int ParseLineToInt(string line)
@@ -64,13 +58,38 @@ namespace _2021_AoC
 
         protected List<int> GetInputAsIntList()
         {
-            var result = new List<int>();
-            foreach (var line in Content)
+            return Content.Select(s => int.Parse(s)).ToList();
+        }
+
+        /// <summary>
+        /// Array [width][height] or [x][y].
+        /// Assumes that line length is constant
+        /// Y
+        /// ^
+        /// |
+        /// |
+        /// |
+        /// o---------> X
+        /// </summary>
+        /// <returns></returns>
+        protected char[,] GetInputAsChar2D()
+        {
+            var width = Content.First().Length;
+            var height = Content.Count();
+
+            var array = new char[width, height];
+            for(int i = 0; i < height; i++)
             {
-                result.Add(ParseLineToInt(line));
+                var arrayIndex = height - i - 1;
+                var line = Content[i];
+
+                for(int j = 0; j < width; j++)
+                {
+                    array[j, arrayIndex] = line[j];
+                }
             }
 
-            return result;
+            return array;
         }
     }
 }

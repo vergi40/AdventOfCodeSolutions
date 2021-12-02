@@ -10,12 +10,15 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Resources", "Resources", "{776BDA97-C926-4242-8FCF-4DC923DC7221}"
 	ProjectSection(SolutionItems) = preProject
 		Resources\00.txt = Resources\00.txt
-		Resources\01-example.txt = Resources\01-example.txt
 		Resources\01.txt = Resources\01.txt
 		Resources\02.txt = Resources\02.txt
+		03.txt = 03.txt
+		04.txt = 04.txt
+		05.txt = 05.txt
+		06.txt = 06.txt
 	EndProjectSection
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Utils", "Utils\Utils.fsproj", "{355FC638-D527-4D6A-B630-7EE26B3D1AB9}"
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Utils", "Utils\Utils.fsproj", "{355FC638-D527-4D6A-B630-7EE26B3D1AB9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
