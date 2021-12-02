@@ -10,6 +10,19 @@ namespace _2021_AoC
     {
         public Day01() : base("01"){ }
 
+        // Result a: 1475
+        // Result b: 1516
+        public override long SolveAF()
+        {
+            var input = GetInputAsIntList();
+            return ChallengeHelpers.Day01.solveA(input);
+        }
+        public override long SolveBF()
+        {
+            var input = GetInputAsIntList();
+            return ChallengeHelpers.Day01.solveB(input);
+        }
+
         public override long SolveA()
         {
             var input = GetInputAsIntList();
@@ -23,7 +36,7 @@ namespace _2021_AoC
                 if (next > current) counter++;
             }
             return counter;
-        }
+        }       
 
         public override long SolveB()
         {

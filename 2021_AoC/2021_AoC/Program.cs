@@ -2,13 +2,13 @@
 using _2021_AoC;
 
 //var solution = new Day00_Warmup();
-//var solution = new Day01();
+var solution = new Day01();
 //var solution = new Day02();
 //var solution = new Day03();
 //var solution = new Day04();
 //var solution = new Day05();
 //var solution = new Day06();
-var solution = new Day07();
+//var solution = new Day07();
 //var solution = new Day08();
 //var solution = new Day09();
 //var solution = new Day10();
@@ -29,6 +29,18 @@ var solution = new Day07();
 //var solution = new Day25();
 
 solution.Initialize();
+
+var result1F = solution.SolveAF();
+var result2F = solution.SolveBF();
+
+if(result1F != 0)
+{
+    Console.WriteLine($"Result a in F#: " + result1F);
+}
+if (result2F != 0)
+{
+    Console.WriteLine($"Result b in F#: " + result2F);
+}
 
 var result1 = solution.SolveA();
 Console.WriteLine($"Result a: " + result1);

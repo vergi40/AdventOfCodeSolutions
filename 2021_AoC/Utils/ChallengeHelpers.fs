@@ -41,16 +41,20 @@ module Day00 =
         printfn "find2020 finished"
         result
 
-//Hello F# call
-//find2020 start
-//sum test: 1914 1931 = 3845
-//sum test: 1931 1892 = 3823
-//sum test: 1892 1584 = 3476
-//sum test: 1584 1546 = 3130
-//sum test: 1546 1988 = 3534
-//sum test: 1988 1494 = 3482
-//sum test: 1494 1709 = 3203
-//sum test: 1709 1624 = 3333
-//sum test: 1624 1755 = 3379
-//sum test: 1755 1849 = 3604
-//sum test: 1849 1430 = 3279
+module Day01 = 
+
+    let solveA seq =
+        let list = Seq.toList seq
+        let list2 = List.pairwise list
+        let increased = List.filter (fun (x,y) -> y > x) list2
+        increased.Length
+
+    let solveB seq =
+        let list = Seq.toList seq
+        let listsOf3 = List.windowed 3 list
+        // Important to define target mapping type (each member is int list)
+        let sumsOf3 = List.map (fun (values: int list) -> (values[0] + values[1] + values[2])) listsOf3
+    
+        // Run the sums as part A
+        solveA sumsOf3
+    

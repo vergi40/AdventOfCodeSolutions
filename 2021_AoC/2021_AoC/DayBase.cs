@@ -39,7 +39,14 @@ namespace _2021_AoC
 
         public abstract long SolveB();
 
-
+        public virtual long SolveAF()
+        {
+            return 0;
+        }
+        public virtual long SolveBF()
+        {
+            return 0;
+        }
 
         // Helper methods
         protected static long ParseLineToLong(string line)
