@@ -41,7 +41,7 @@ namespace _2021_AoC
 
 
         // Helper methods
-        protected long ParseLineToLong(string line)
+        protected static long ParseLineToLong(string line)
         {
             return long.Parse(line);
         }
@@ -51,7 +51,7 @@ namespace _2021_AoC
             return Content.Select(s => long.Parse(s)).ToList();
         }
 
-        protected int ParseLineToInt(string line)
+        protected static int ParseLineToInt(string line)
         {
             return int.Parse(line);
         }
@@ -72,20 +72,51 @@ namespace _2021_AoC
         /// o---------> X
         /// </summary>
         /// <returns></returns>
-        protected char[,] GetInputAsChar2D()
+        protected static char[,] ParseStringListToChar2D(List<string> list)
         {
-            var width = Content.First().Length;
-            var height = Content.Count();
+            var width = list.First().Length;
+            var height = list.Count();
 
             var array = new char[width, height];
-            for(int i = 0; i < height; i++)
+            for (int i = 0; i < height; i++)
             {
                 var arrayIndex = height - i - 1;
-                var line = Content[i];
+                var line = list[i];
 
-                for(int j = 0; j < width; j++)
+                for (int j = 0; j < width; j++)
                 {
                     array[j, arrayIndex] = line[j];
+                }
+            }
+
+            return array;
+        }
+
+        /// <summary>
+        /// Array [width][height] or [x][y].
+        /// Assumes that line length is constant
+        /// Y
+        /// ^
+        /// |
+        /// |
+        /// |
+        /// o---------> X
+        /// </summary>
+        /// <returns></returns>
+        protected static int[,] ParseStringListToInt2D(List<string> list)
+        {
+            var width = list.First().Length;
+            var height = list.Count();
+
+            var array = new int[width, height];
+            for (int i = 0; i < height; i++)
+            {
+                var arrayIndex = height - i - 1;
+                var line = list[i];
+
+                for (int j = 0; j < width; j++)
+                {
+                    array[j, arrayIndex] = int.Parse(line[j].ToString());
                 }
             }
 
