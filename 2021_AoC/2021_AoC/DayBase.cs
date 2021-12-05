@@ -10,7 +10,8 @@ namespace _2021_AoC
     internal abstract class DayBase
     {
         public string DayNumber { get; }
-        public List<string> Content { get; private set; } = new List<string>();
+        private List<string> _content { get; set; } = new List<string>();
+        public IReadOnlyList<string> Content => _content;
 
         protected DayBase(string dayNumberAsString)
         {
@@ -26,7 +27,7 @@ namespace _2021_AoC
         private void InitializeBase()
         {
             var content = FileSystem.GetInputData(DayNumber);
-            if(content != null) Content = content;
+            if(content != null) _content = content;
         }
 
         protected virtual void InitializeChild()
