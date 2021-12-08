@@ -2,14 +2,14 @@
 using _2021_AoC;
 
 //var solution = new Day00_Warmup();
-var solution = new Day01();
+//var solution = new Day01();
 //var solution = new Day02();
 //var solution = new Day03();
 //var solution = new Day04();
 //var solution = new Day05();
 //var solution = new Day06();
 //var solution = new Day07();
-//var solution = new Day08();
+var solution = new Day08();
 //var solution = new Day09();
 //var solution = new Day10();
 //var solution = new Day11();
