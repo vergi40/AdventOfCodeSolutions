@@ -130,5 +130,47 @@ namespace _2021_AoC
 
             return array;
         }
+
+        /// <summary>
+        /// Creates perimeter around 2D array for easier edge value checking
+        ///
+        /// -1 -1 -1 -1
+        /// -1  0  0 -1
+        /// -1  0  0 -1
+        /// -1 -1 -1 -1
+        /// 
+        /// </summary>
+        /// <param name="original"></param>
+        /// <param name="perimeterValue"></param>
+        /// <returns></returns>
+        protected int[,] Int2DToWrappedInt2D(int[,] original, int perimeterValue = -1)
+        {
+            var (width, height) = Get2DMeasures(original);
+
+            var array = new int[width + 2, height + 2];
+            for (int i = 0; i < height ; i++)
+            {
+                for (int j = 0; j < width; j++)
+                {
+                    array[i + 1, j + 1] = original[i, j];
+                }
+            }
+
+            // Edges
+            for (int i = 0; i < width + 2; i++)
+            {
+                array[i, 0] = perimeterValue;
+                array[i, height + 1] = perimeterValue;
+            }
+            for (int i = 0; i < height + 2; i++)
+            {
+                array[0, i] = perimeterValue;
+                array[width + 1, i] = perimeterValue;
+            }
+
+            return array;
+        }
+
+        protected (int width, int height) Get2DMeasures(int[,] array) => (array.GetLength(0), array.GetLength(1));
     }
 }
