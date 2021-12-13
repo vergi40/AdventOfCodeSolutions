@@ -7,28 +7,10 @@ using System.Threading.Tasks;
 
 namespace _2021_AoC
 {
-    static class TupleExtensions
-    {
-        public static IEnumerable<T> Enumerate<T>(this (T, T) tuple)
-        {
-            yield return tuple.Item1;
-            yield return tuple.Item2;
-        }
-
-        public static IEnumerable Enumerate2(this object tuple)
-        {
-            return tuple.GetType().GetProperties()
-                .Select(property => property.GetValue(tuple));
-        }
-
-        public static IList<T> ToList<T>(this (T, T) tuple)
-        {
-            return new List<T>() { tuple.Item1, tuple.Item2 };
-        }
-    }
-
     internal class Day12:DayBase
     {
+        private List<string> ResultsAsString { get; set; } = new();
+
         public Day12() : base("12")
         {
         }
@@ -64,20 +46,58 @@ namespace _2021_AoC
             SearchTillEnd(new List<Node>() { start });
 
             var result = ResultsAsString.Count();
+            
+            //foreach (var resultLine in ResultsAsString)
+            //{
+            //    Console.WriteLine(resultLine);
+            //}
 
-            // 3037 - too low
-            foreach (var resultLine in ResultsAsString)
-            {
-                Console.WriteLine(resultLine);
-            }
+            ResultsAsString.Clear();
+
+            // 4304
             return result;
         }
 
-        // TODO DELETE ------------
-        private List<List<Node>> Results { get; set; } = new();
-        private List<string> ResultsAsString { get; set; } = new();
-        private const bool ConstDebugPrint = false;
-        // ----------------------
+        public override long SolveB()
+        {
+            var map = new Dictionary<string, Node2>();
+            //foreach (var line in example1)
+            //foreach (var line in example2)
+            foreach (var line in Content)
+            {
+                var lineArray = line.Split('-');
+
+                var name = lineArray[0];
+                var name2 = lineArray[1];
+
+                if (!map.TryGetValue(name, out var node))
+                {
+                    node = new Node2(name);
+                    map.Add(name, node);
+                }
+                if (!map.TryGetValue(name2, out var node2))
+                {
+                    node2 = new Node2(name2);
+                    map.Add(name2, node2);
+                }
+
+                node.Nodes.Add(node2);
+                node2.Nodes.Add(node);
+            }
+
+            var start = map["start"];
+            SearchTillEnd(new List<Node2>() { start });
+
+            var result = ResultsAsString.Count();
+
+            //foreach (var resultLine in ResultsAsString)
+            //{
+            //    Console.WriteLine(resultLine);
+            //}
+
+            ResultsAsString.Clear();
+            return result;
+        }
 
         private void SearchTillEnd(IReadOnlyList<Node> path)
         {
@@ -86,31 +106,15 @@ namespace _2021_AoC
             {
                 if (next.Name == "end")
                 {
-                    var endPath = new List<Node>(path);
-                    endPath.Add(next);
-                    DebugPrint(endPath);
+                    var endPath = new List<Node>(path) { next };
                     ResultsAsString.Add(NodesToString(endPath));
                 }
                 else if (next.CanVisit(path))
                 {
-                    var nextPath = new List<Node>(path);
-                    nextPath.Add(next);
-                    DebugPrint(nextPath);
-
+                    var nextPath = new List<Node>(path) { next };
                     SearchTillEnd(nextPath);
                 }
             }
-        }
-
-
-        public override long SolveB()
-        {
-            return 0;
-        }
-
-        private static void DebugPrint(List<Node> nodes)
-        {
-            if(ConstDebugPrint) Console.WriteLine(NodesToString(nodes));
         }
         private static string NodesToString(List<Node> nodes)
         {
@@ -120,12 +124,10 @@ namespace _2021_AoC
         class Node
         {
             public string Name { get; }
-            public List<Node> Nodes { get; set; } = new List<Node>();
+            public List<Node> Nodes { get; set; } = new();
 
 
-            private readonly bool _multiTravel;
-            private readonly bool _start;
-            private readonly bool _end;
+            public bool MultiTravel { get; }
 
             public Node(string name)
             {
@@ -133,15 +135,12 @@ namespace _2021_AoC
 
                 if (char.IsUpper(name[0]))
                 {
-                    _multiTravel = true;
+                    MultiTravel = true;
                 }
                 else
                 {
-                    _multiTravel = false;
+                    MultiTravel = false;
                 }
-
-                if (name == "start") _start = true;
-                if (name == "end") _end = true;
             }
             
             public override string ToString()
@@ -149,9 +148,9 @@ namespace _2021_AoC
                 return $"{Name}: {NodesToString(Nodes)}";
             }
 
-            public bool CanVisit(IReadOnlyList<Node> history)
+            public virtual bool CanVisit(IReadOnlyList<Node> history)
             {
-                if (_multiTravel)
+                if (MultiTravel)
                 {
                     return true;
                 }
@@ -161,6 +160,50 @@ namespace _2021_AoC
                 }
 
                 return false;
+            }
+        }
+
+        class Node2 : Node
+        {
+            public Node2(string name) : base(name)
+            {
+            }
+
+            public override bool CanVisit(IReadOnlyList<Node> history)
+            {
+                if (MultiTravel)
+                {
+                    return true;
+                }
+
+                if (Name == "start") return false;
+
+                // This is probably slow as _____, but works!
+                var dict = new Dictionary<string, int>();
+                var singleTravelList = history.Where(item => !item.MultiTravel).ToList();
+                singleTravelList.Add(this);
+                foreach (var node in singleTravelList)
+                {
+                    if (!dict.TryAdd(node.Name, 1))
+                    {
+                        dict[node.Name]++;
+                    }
+                }
+
+                var existsTwice = false;
+                foreach (var counter in dict.Values)
+                {
+                    if (counter > 2) return false;
+                    if (counter > 1)
+                    {
+                        if (existsTwice)
+                        {
+                            return false;
+                        }
+                        existsTwice = true;
+                    }
+                }
+                return true;
             }
         }
 
@@ -188,5 +231,26 @@ namespace _2021_AoC
             "kj-HN",
             "kj-dc"
         };
+    }
+
+
+    static class TupleExtensions
+    {
+        public static IEnumerable<T> Enumerate<T>(this (T, T) tuple)
+        {
+            yield return tuple.Item1;
+            yield return tuple.Item2;
+        }
+
+        public static IEnumerable Enumerate2(this object tuple)
+        {
+            return tuple.GetType().GetProperties()
+                .Select(property => property.GetValue(tuple));
+        }
+
+        public static IList<T> ToList<T>(this (T, T) tuple)
+        {
+            return new List<T>() { tuple.Item1, tuple.Item2 };
+        }
     }
 }
