@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.FSharp.Collections;
 
 namespace _2021_AoC
 {
@@ -14,6 +15,9 @@ namespace _2021_AoC
         private int[,] map;
         private int width;
         private int height;
+
+        private long evaluated = 0;
+        private long evaluatedPaths = 0;
 
         public Day15() : base("15")
         {
@@ -28,11 +32,19 @@ namespace _2021_AoC
             (width, height) = Get2DMeasures(map);
 
             var path = IterateToFinish(
-                new HashSet<(int x, int y)>(), 
                 new List<(int x, int y)>(){(0,1)}, 
                 (1, 1));
 
+            Console.WriteLine($"Travelled: {evaluated}");
+            Console.WriteLine($"Paths evaluated: {evaluatedPaths}");
+            if (path != null) return GetSum(path.Skip(2));
             return 0;
+        }
+
+        private int GetSum(IEnumerable<(int, int)> path)
+        {
+            var sum = path.Skip(2).Sum(pair => map[pair.Item1, pair.Item2]);
+            return sum;
         }
 
         public override long SolveB()
@@ -40,39 +52,33 @@ namespace _2021_AoC
             return 0;
         }
 
-        private List<(int x, int y)> IterateToFinish(HashSet<(int x, int y)> visited,
-            List<(int x, int y)> behind, (int x, int y) current)
+        /// <summary>
+        /// Null: dead end
+        /// </summary>
+        /// <param name="previousPath"></param>
+        /// <param name="current"></param>
+        /// <returns></returns>
+        private List<(int x, int y)>? IterateToFinish(List<(int x, int y)> previousPath, (int x, int y) current)
         {
             if (current == (width - 2, height - 2))
             {
                 // End
-                behind.Add(current);
-                return behind;
-            }
-
-            if (visited.Contains(current))
-            {
-                // Ended up to visited path
-                return new List<(int x, int y)>();
-            }
-            else if (map[current.x, current.y] == -1)
-            {
-                // Edge
-                return new List<(int x, int y)>();
+                evaluatedPaths++;
+                previousPath.Add(current);
+                return previousPath;
             }
 
             // Current position ok
-            var nextList = CalculateNextDirections(behind, current).ToList();
-            behind.Add(current);
-            visited.Add(current);
-
-            // debug print
+            var nextList = SortNextDirections(previousPath, current).ToList();
+            previousPath.Add(current);
 
             var resultList = new List<(List<(int x, int y)>,int sum)>();
             foreach (var next in nextList)
             {
-                var result = IterateToFinish(visited, behind.ToList(), next);
-                if (result.Count == 0)
+                evaluated++;
+                var currentPath = new List<(int x, int y)>(previousPath){current};
+                var result = IterateToFinish(currentPath, next);
+                if (result == null)
                 {
                     // There was some obstacle
                 }
@@ -80,39 +86,48 @@ namespace _2021_AoC
                 {
                     var sum = result.Sum(pair => map[pair.x, pair.y]);
                     resultList.Add((result, sum));
-                    // Found path!
-                    // TODO add risk sum calculation
-                    //return result;
                 }
             }
 
             if (resultList.Any())
             {
-                resultList = resultList.OrderBy(x => x.sum).ToList();
+                resultList = resultList.OrderBy(item => item.sum).ToList();
                 return resultList.First().Item1;
             }
 
-            return new List<(int x, int y)>();
-
+            return null;
         }
 
-        private static IEnumerable<(int x, int y)> CalculateNextDirections(List<(int x, int y)> behind, (int x, int y) current)
+        private IEnumerable<(int x, int y)> SortNextDirections(List<(int x, int y)> behind, (int,int) current)
         {
-            var previousX = current.x - behind.Last().x;
-            var previousY = current.y - behind.Last().y;
-            if (previousX == 0)
+            // Default directions: right and down
+            var (x, y) = current;
+            var right = map[x + 1, y];
+            var down = map[x, y + 1];
+
+            if (right < 0)
             {
-                // Last movement was vertical
-                yield return (current.x, current.y + previousY);
-                yield return (current.x + 1, current.y);
-                yield return (current.x - 1, current.y);
+                yield return (x, y + 1);
+                yield break;
+            }
+            if (down < 0)
+            {
+                yield return (x + 1, y);
+                yield break;
+            }
+
+            // Prefer the smaller risk
+            if (right < down)
+            {
+                yield return (x + 1, y);
+                yield return (x, y + 1);
             }
             else
             {
-                yield return (current.x + previousX, current.y);
-                yield return (current.x, current.y + 1);
-                yield return (current.x, current.y - 1);
+                yield return (x, y + 1);
+                yield return (x + 1, y);
             }
+
         }
 
         private static List<string>  example = new()
