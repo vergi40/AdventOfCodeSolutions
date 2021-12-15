@@ -68,6 +68,7 @@ namespace _2021_AoC
 
             // debug print
 
+            var resultList = new List<(List<(int x, int y)>,int sum)>();
             foreach (var next in nextList)
             {
                 var result = IterateToFinish(visited, behind.ToList(), next);
@@ -77,10 +78,18 @@ namespace _2021_AoC
                 }
                 else
                 {
+                    var sum = result.Sum(pair => map[pair.x, pair.y]);
+                    resultList.Add((result, sum));
                     // Found path!
                     // TODO add risk sum calculation
-                    return result;
+                    //return result;
                 }
+            }
+
+            if (resultList.Any())
+            {
+                resultList = resultList.OrderBy(x => x.sum).ToList();
+                return resultList.First().Item1;
             }
 
             return new List<(int x, int y)>();
