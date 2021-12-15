@@ -32,12 +32,11 @@ namespace _2021_AoC
             (width, height) = Get2DMeasures(map);
 
             var path = IterateToFinish(
-                new List<(int x, int y)>(){(0,1)}, 
-                (1, 1));
+                new List<(int x, int y)>(){(1,11)}, (1, 10));
 
             Console.WriteLine($"Travelled: {evaluated}");
             Console.WriteLine($"Paths evaluated: {evaluatedPaths}");
-            if (path != null) return GetSum(path.Skip(2));
+            if (path != null) return GetSum(path);
             return 0;
         }
 
@@ -60,7 +59,7 @@ namespace _2021_AoC
         /// <returns></returns>
         private List<(int x, int y)>? IterateToFinish(List<(int x, int y)> previousPath, (int x, int y) current)
         {
-            if (current == (width - 2, height - 2))
+            if (current == (width - 2, 1))
             {
                 // End
                 evaluatedPaths++;
@@ -70,7 +69,6 @@ namespace _2021_AoC
 
             // Current position ok
             var nextList = SortNextDirections(previousPath, current).ToList();
-            previousPath.Add(current);
 
             var resultList = new List<(List<(int x, int y)>,int sum)>();
             foreach (var next in nextList)
@@ -103,11 +101,11 @@ namespace _2021_AoC
             // Default directions: right and down
             var (x, y) = current;
             var right = map[x + 1, y];
-            var down = map[x, y + 1];
+            var down = map[x, y - 1];
 
             if (right < 0)
             {
-                yield return (x, y + 1);
+                yield return (x, y - 1);
                 yield break;
             }
             if (down < 0)
@@ -120,11 +118,11 @@ namespace _2021_AoC
             if (right < down)
             {
                 yield return (x + 1, y);
-                yield return (x, y + 1);
+                yield return (x, y - 1);
             }
             else
             {
-                yield return (x, y + 1);
+                yield return (x, y - 1);
                 yield return (x + 1, y);
             }
 
