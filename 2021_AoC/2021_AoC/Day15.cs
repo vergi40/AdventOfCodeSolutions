@@ -26,8 +26,8 @@ namespace _2021_AoC
 
         public override long SolveA()
         {
-            var temp = ParseStringListToInt2D(example.ToList());
-            //var temp = ParseStringListToInt2D(Content.ToList());
+            //var temp = ParseStringListToInt2D(example.ToList());
+            var temp = ParseStringListToInt2D(Content.ToList());
             map = Int2DToWrappedInt2D(temp);
             (width, height) = Get2DMeasures(map);
 
