@@ -25,6 +25,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Resources", "Resources", "{
 		Resources\13.txt = Resources\13.txt
 		Resources\14.txt = Resources\14.txt
 		Resources\15.txt = Resources\15.txt
+		Resources\16.txt = Resources\16.txt
+		Resources\17.txt = Resources\17.txt
+		Resources\18.txt = Resources\18.txt
+		Resources\19.txt = Resources\19.txt
+		Resources\20.txt = Resources\20.txt
+		Resources\21.txt = Resources\21.txt
+		Resources\22.txt = Resources\22.txt
+		Resources\23.txt = Resources\23.txt
+		Resources\24.txt = Resources\24.txt
+		Resources\25.txt = Resources\25.txt
 	EndProjectSection
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Utils", "Utils\Utils.fsproj", "{355FC638-D527-4D6A-B630-7EE26B3D1AB9}"
