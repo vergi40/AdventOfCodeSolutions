@@ -32,11 +32,11 @@ namespace _2021_AoC
             (width, height) = Get2DMeasures(map);
 
             var path = IterateToFinish(
-                new List<(int x, int y)>(){(1,11)}, (1, 10));
+                new List<(int x, int y)>(){(1,11)}, 0, (1, 10));
 
             Console.WriteLine($"Travelled: {evaluated}");
             Console.WriteLine($"Paths evaluated: {evaluatedPaths}");
-            if (path != null) return GetSum(path);
+            if (path.Item1 != null) return path.sum - map[1,10];
             return 0;
         }
 
@@ -54,46 +54,44 @@ namespace _2021_AoC
         /// <summary>
         /// Null: dead end
         /// </summary>
-        /// <param name="previousPath"></param>
-        /// <param name="current"></param>
         /// <returns></returns>
-        private List<(int x, int y)>? IterateToFinish(List<(int x, int y)> previousPath, (int x, int y) current)
+        private (List<(int x, int y)>?, int sum) IterateToFinish(List<(int x, int y)> previousPath, int previousSum, (int x, int y) current)
         {
             if (current == (width - 2, 1))
             {
                 // End
                 evaluatedPaths++;
                 previousPath.Add(current);
-                return previousPath;
+                return (previousPath, previousSum + map[current.x, current.y]);
             }
 
             // Current position ok
             var nextList = SortNextDirections(previousPath, current).ToList();
 
-            var resultList = new List<(List<(int x, int y)>,int sum)>();
+            var resultList = new List<(List<(int x, int y)>?,int sum)>();
             foreach (var next in nextList)
             {
                 evaluated++;
                 var currentPath = new List<(int x, int y)>(previousPath){current};
-                var result = IterateToFinish(currentPath, next);
-                if (result == null)
+                var currentSum = previousSum + map[current.x, current.y];
+                var result = IterateToFinish(currentPath, currentSum, next);
+                if (result.Item1 == null)
                 {
                     // There was some obstacle
                 }
                 else
                 {
-                    var sum = result.Sum(pair => map[pair.x, pair.y]);
-                    resultList.Add((result, sum));
+                    resultList.Add(result);
                 }
             }
 
             if (resultList.Any())
             {
                 resultList = resultList.OrderBy(item => item.sum).ToList();
-                return resultList.First().Item1;
+                return resultList.First();
             }
 
-            return null;
+            return (null,0);
         }
 
         private IEnumerable<(int x, int y)> SortNextDirections(List<(int x, int y)> behind, (int,int) current)
