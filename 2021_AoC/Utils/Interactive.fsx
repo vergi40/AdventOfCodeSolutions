@@ -11,11 +11,23 @@ let hexToBinary (c:char) =
     let d = c.PadLeft(4, '0')
     d
 
+// The "F# way" 1
+let hexToBinary' (c:char) = 
+    c
+    |> fun x -> new String(x, 1)
+    |> fun x -> Int16.Parse(x, Globalization.NumberStyles.AllowHexSpecifier)
+    |> fun x -> Convert.ToString(x, 2)
+    |> fun x -> x.PadLeft(4, '0')   
 
+let toBinaryText (s:string) =
+    let binarySeq = Seq.map(fun i -> hexToBinary' i) s
+    let binaryArray = Seq.concat binarySeq
+    new String(Seq.toArray binaryArray)
+
+
+// -------------
 let solveA (input:string) =
-    let binaryList = Seq.map(fun i -> hexToBinary i) input
-    let binary = Seq.concat binaryList
-    let binaryText = new String(Seq.toArray binary)
+    let binaryText = toBinaryText input
     printfn "%A" binaryText
     binaryText
     // 110100101111111000101000
