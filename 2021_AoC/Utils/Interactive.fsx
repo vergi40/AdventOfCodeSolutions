@@ -1,6 +1,7 @@
 ﻿module Interactive
 open System
 
+// 110100101111111000101000
 let ex1 = "D2FE28"
 
 // Other methods: Text.Encoding.ASCII.GetBytes, Byte.Parse(hex, Globalization.NumberStyles.AllowHexSpecifier)
@@ -19,6 +20,10 @@ let hexToBinary' (c:char) =
     |> fun x -> Convert.ToString(x, 2)
     |> fun x -> x.PadLeft(4, '0')   
 
+let binaryToInt (s:string) =
+    Convert.ToInt32(s, 2)
+
+
 let toBinaryText (s:string) =
     let binarySeq = Seq.map(fun i -> hexToBinary' i) s
     let binaryArray = Seq.concat binarySeq
@@ -29,8 +34,9 @@ let toBinaryText (s:string) =
 let solveA (input:string) =
     let binaryText = toBinaryText input
     printfn "%A" binaryText
-    binaryText
-    // 110100101111111000101000
+    let packetVersion = binaryToInt binaryText.[0..2]
+    let typeID = binaryToInt binaryText.[3..5]
+    ()
 
 solveA ex1
 
