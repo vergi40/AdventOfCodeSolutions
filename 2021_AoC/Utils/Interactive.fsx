@@ -29,13 +29,29 @@ let toBinaryText (s:string) =
     let binaryArray = Seq.concat binarySeq
     new String(Seq.toArray binaryArray)
 
+let rec readTail (s:string) depth =
+    match s with
+    | s when s.StartsWith('1') -> 
+        printfn "%i: %s" depth s[0..4]
+        readTail s.[5..] (depth+1)
+    | s when s.StartsWith('0') -> printfn "%i: %s" depth s
+    | _ -> ()
 
+//printfn "%i: %s" 5 "asd"
+
+let readNewPacket tail =
+    ()
+
+// 110100101111111000101000
+// 110 100 10111 11110 00101 000
 // -------------
 let solveA (input:string) =
     let binaryText = toBinaryText input
     printfn "%A" binaryText
     let packetVersion = binaryToInt binaryText.[0..2]
     let typeID = binaryToInt binaryText.[3..5]
+    if typeID = 4 then readTail binaryText.[6..] 1
+    else readNewPacket binaryText.[6..]       
     ()
 
 solveA ex1
