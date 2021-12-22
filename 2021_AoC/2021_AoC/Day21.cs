@@ -50,6 +50,21 @@ namespace _2021_AoC
             return 0;
         }
 
+        public override long SolveB()
+        {
+            var p1Pos = 8;
+            var p2Pos = 3;
+            //var p1Pos = 4;
+            //var p2Pos = 8;
+
+            var p1Score = 0;
+            var p2Score = 0;
+            var dice = 0;
+
+
+            return 0;
+        }
+
         private int CalculateSpace(ref int dice, ref int playerPos)
         {
             var space = playerPos;
@@ -68,9 +83,44 @@ namespace _2021_AoC
             return space;
         }
 
-        public override long SolveB()
+        // 3 rolls [1,2,3]
+        // 1,1,1 1,1,2 1,1,3
+        // 1,2,1 1,2,2 1,2,3
+        // 1,3,1 1,3,2 1,3,3
+        // all starting number 1: 3,4,5 4,5,6 5,6,7
+        // aka 3,4,4,5,5,5,6,6,7
+        // all starting number 2 and 3: +1 and +2
+        private List<int> QuantumRolls { get; } = new List<int>
         {
-            return 0;
+            3, 4, 4, 5, 5, 5, 6, 6, 7,
+            4, 5, 5, 6, 6, 6, 7, 7, 8,
+            5, 6, 6, 7, 7, 7, 8, 8, 9
+        };
+
+        private List<int> CalculateNextScore(int currentScore)
+        {
+            var playerPos = currentScore % 10;
+            if (playerPos == 0) playerPos = 10;
+
+            foreach (var quantumRoll in QuantumRolls)
+            {
+                var nPos = playerPos + quantumRoll;
+            }
+
+            var space = playerPos;
+            for (int i = 0; i < 3; i++)
+            {
+                dice++;
+                totalDice++;
+                dice = dice % 100;
+                if (dice == 0) dice = 100;
+                space += dice;
+            }
+
+            space = space % 10;
+            if (space == 0) space = 10;
+            playerPos = space;
+            return space;
         }
     }
 }
