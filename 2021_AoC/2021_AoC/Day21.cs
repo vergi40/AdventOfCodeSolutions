@@ -52,14 +52,30 @@ namespace _2021_AoC
 
         public override long SolveB()
         {
-            var p1Pos = 8;
-            var p2Pos = 3;
-            //var p1Pos = 4;
-            //var p2Pos = 8;
+            //var p1Pos = 8;
+            //var p2Pos = 3;
+            var p1Pos = 4;
+            var p2Pos = 8;
 
-            var p1Score = 0;
-            var p2Score = 0;
-            var dice = 0;
+            var p1Scores = new List<int> { 0 };
+            var p2Scores = new List<int> { 0 };
+
+            while(true)
+            {
+                var temp = new List<int>();
+                foreach (var p1Score in p1Scores)
+                {
+                    temp.AddRange(CalculateNextScore(p1Score));
+                }
+
+                p1Scores = temp;
+                if (p1Scores.Any(s => s >= 21))
+                {
+                    //
+                    Console.WriteLine($"P1 wins in todo universes");
+                }
+
+            }
 
 
             return 0;
@@ -97,7 +113,7 @@ namespace _2021_AoC
             5, 6, 6, 7, 7, 7, 8, 8, 9
         };
 
-        private List<int> CalculateNextScore(int currentScore)
+        private IEnumerable<int> CalculateNextScore(int currentScore)
         {
             var playerPos = currentScore % 10;
             if (playerPos == 0) playerPos = 10;
@@ -105,22 +121,9 @@ namespace _2021_AoC
             foreach (var quantumRoll in QuantumRolls)
             {
                 var nPos = playerPos + quantumRoll;
+                //if (nPos == 0) nPos = 10;
+                yield return currentScore + nPos;
             }
-
-            var space = playerPos;
-            for (int i = 0; i < 3; i++)
-            {
-                dice++;
-                totalDice++;
-                dice = dice % 100;
-                if (dice == 0) dice = 100;
-                space += dice;
-            }
-
-            space = space % 10;
-            if (space == 0) space = 10;
-            playerPos = space;
-            return space;
         }
     }
 }
