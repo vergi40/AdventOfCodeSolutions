@@ -15,7 +15,7 @@ using _2021_AoC;
 //var solution = new Day11();
 //var solution = new Day12();
 //var solution = new Day13();
-var solution = new Day14();
+//var solution = new Day14();
 //var solution = new Day15();
 //var solution = new Day16();
 //var solution = new Day17();
@@ -25,7 +25,7 @@ var solution = new Day14();
 //var solution = new Day21();
 //var solution = new Day22();
 //var solution = new Day23();
-//var solution = new Day24();
+var solution = new Day24();
 //var solution = new Day25();
 
 solution.Initialize();
