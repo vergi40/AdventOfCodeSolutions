@@ -1,6 +1,4 @@
-﻿using System.Collections.Concurrent;
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
+﻿using System.Diagnostics;
 
 namespace _2021_AoC
 {
@@ -8,178 +6,100 @@ namespace _2021_AoC
     {
         public Day24() : base("24")
         {
+            Console.WriteLine($"Split ALU commands by each input. Find all possible outcomes for 1st digit.");
+            Console.WriteLine("Use them combined to output z values for 2nd digit. Repeat");
         }
 
-        private Dictionary<char, int> Dict { get; set; } = new()
+        protected override void InitializeChild()
         {
-            { 'w', 0 },
-            { 'x', 0 },
-            { 'y', 0 },
-            { 'z', 0 },
-        };
+            Phases = ParsePhases(Content);
+        }
 
-        private Queue<int> Input { get; set; } = new Queue<int>();
-        internal const int SearchBase = 5_000;
+        public Dictionary<int, Phase> Phases { get; set; }
+
+        /// <summary>
+        /// Do memoization. If digit with certain depth is already inspected, don't repeat
+        /// </summary>
+        private HashSet<(int digit, int depth, int z)> Mem { get; } = new();
 
 
         public override long SolveA()
         {
-            // We want z to be 0. Let's backtrack
-            // Solve all inputs or 14th digit that result z = 0
-            // Use them to solve all inputs for 13th digit
-            // etc
-
-            Console.WriteLine($"Starting backwards run to figure out all possible digits. Constants: SearchBase = {SearchBase}");
-            var phases = ParsePhases(Content);
-
+            Console.WriteLine($"A: Find largest possible number");
+            Mem.Clear();
             var totalWatch = new Stopwatch();
             totalWatch.Start();
-            var stopWatch = new Stopwatch();
-            stopWatch.Start();
-            var digit14 = phases[14].GetValidInputsWithAnyZ(0).ToList();
-            //PrintPossibilities(digit14, 14, stopWatch);
-            Console.WriteLine($"Phase {14} complete. Digit possibilities: {digit14.Count}. Total time {totalWatch.Elapsed.ToString()}");
 
+            var digit1List = Phases[1].GetAllOutputsForZ(0, true).OrderByDescending(x => x.digit);
+            var startList = new List<(int, int)>() { digit1List.First()};
 
-                // --------------
-            var allPossibilities = new List<List<(int inputDigit, int inputZ)>>();
-            allPossibilities.Add(digit14);
+            var result = DepthFirstRec(2, startList, true);
+            var resultString = string.Join("", result.Select(pair => pair.digit));
+            Console.WriteLine($"Search time: {totalWatch.Elapsed.ToString()}");
 
-            List<(int inputDigit, int inputZ)> digitPrevious = digit14;
-            for (int phaseLevel = 13; phaseLevel > 0; phaseLevel--)
+            return long.Parse(resultString);
+        }
+
+        public override long SolveB()
+        {
+            Console.WriteLine($"B: Find lowest possible number");
+            Mem.Clear();
+            var totalWatch = new Stopwatch();
+            totalWatch.Start();
+
+            var digit1List = Phases[1].GetAllOutputsForZ(0, false).OrderBy(x => x.digit);
+            foreach (var digit1Values in digit1List)
             {
-                List<(int inputDigit, int inputZ)> digitN = new();
-                foreach (var (inputDigit, inputZ) in digitPrevious)
-                {
-                    var temp = phases[phaseLevel].GetValidInputsWithAnyZ(inputZ).ToList();
-                    if(temp.Any())
-                    {
-                        //PrintPossibilities(temp, phaseLevel, inputZ);
-                    }
-                    digitN.AddRange(temp);
-                }
-                Console.WriteLine($"Phase {phaseLevel} complete. Digit possibilities: {digitN.Count}. Total time {totalWatch.Elapsed.ToString()}");
-                ResetWatch(stopWatch);
+                var startList = new List<(int, int)>() { digit1Values };
+                var result = DepthFirstRec(2, startList, false);
 
-                digitN = digitN.Distinct().ToList();
-                allPossibilities.Add(digitN);
-                digitPrevious = digitN;
+                if(result.Any())
+                {
+                    var resultString = string.Join("", result.Select(pair => pair.digit));
+                    Console.WriteLine($"Search time: {totalWatch.Elapsed.ToString()}");
+
+                    return long.Parse(resultString);
+                }
             }
 
-            if (!allPossibilities.Last().Any())
-            {
-                Console.WriteLine("Didn't receive digits for all indexes.");
-                return 0;
-            }
-
-            // Build full numbers
-            var resultList = new List<string>();
-            foreach (var first in allPossibilities.Last())
-            {
-                var full = "";
-                var digit = first.inputDigit;
-                full += digit.ToString();
-
-                var index = 2;
-                while (index <= 14)
-                {
-                    var next = allPossibilities[index].Find(pair => pair.inputDigit == digit);
-                    digit = next.inputDigit;
-                    full += digit.ToString();
-                    index++;
-                }
-
-                Console.WriteLine($"Found result number: {full}");
-                resultList.Add(full);
-            }
-
-            resultList.Sort();
-            foreach (var result in resultList)
-            {
-                Console.WriteLine($"{result}");
-            }
-            return 0;
-
-
-            var start = 11111111111111;
-            var iMax = 99999999999999;
-            var incr = 1;
-
-
-            //long first = 13579246899999;
-            for (long i = start; i < iMax; i += incr)
-            {
-                var s = i.ToString();
-                if (s.Contains('0')) continue;
-                //var reverse = Reverse(i.ToString());
-                //var revL = long.Parse(reverse);
-
-                var tail = s.Substring(s.Length - 2);
-                if (tail == "79")
-                {
-                    //Good
-                }
-                else continue;
-
-                var subTail = s.Substring(s.Length - 4, 2);
-                if (subTail[0] - subTail[1] == 1)
-                {
-                    //Good
-                }
-                else continue;
-
-                // ----------
-                var input = i;
-                //if (input % 10000000 == 0)
-                //{
-                //    Console.WriteLine($"Currently looping: {i}");
-                //}
-                try
-                {
-                    //var result = DebugIsValid(i);
-                    var result = IsValid(input);
-                    if (result)
-                    {
-                        return input;
-                    }
-
-                    // Debugging rules
-                    Console.WriteLine($"Input: {input}. w {Dict['w'],-5}, x {Dict['x'],-5}, y {Dict['y'],-5}, z {Dict['z']}");
-                }
-                catch(Exception e)
-                {
-                    Console.WriteLine($"{input} threw exception {e.Message}");
-                }
-            }
             return 0;
         }
-        private void PrintPossibilities(List<(int inputDigit, int inputZ)> inputs, int digit, int targetZ)
+
+        private List<(int digit, int outputZ)> DepthFirstRec(int depth, List<(int digit, int outputZ)> newList, bool findHighest)
         {
-            Console.WriteLine($"Possibilities for digit on location {digit} - target output Z [{targetZ}]:");
-            foreach (var valueTuple in inputs)
+            var current = Phases[depth].GetAllOutputsForZ(newList.Last().outputZ, findHighest).ToList();
+            current = current.Where(x => x.outputZ >= 0).ToList();
+            
+            foreach (var valueTuple in current)
             {
-                Console.WriteLine($"Digit [{valueTuple.inputDigit}]: with input value z of {valueTuple.inputZ}");
+                if (depth == 14)
+                {
+                    if (valueTuple.outputZ == 0)
+                    {
+                        newList.Add(valueTuple);
+                        return newList;
+                    }
+                }
+                else if (Mem.Contains((valueTuple.digit, depth, valueTuple.outputZ)))
+                {
+                    continue;
+                }
+                else
+                {
+                    Mem.Add((valueTuple.digit, depth, valueTuple.outputZ));
+                    var nextList = new List<(int digit, int outputZ)>(newList) { valueTuple };
+                    var next = DepthFirstRec(depth + 1, nextList, findHighest);
+                    if (next.Any() && next.Count == 14)
+                    {
+                        return next;
+                    }
+                }
             }
 
-            Console.WriteLine();
-        }
-        private void PrintPossibilities(List<(int inputDigit, int inputZ)> inputs, int digit, Stopwatch watch)
-        {
-            Console.WriteLine($"Possibilities for digit on location {digit}:");
-            foreach (var valueTuple in inputs)
-            {
-                Console.WriteLine($"Digit [{valueTuple.inputDigit}]: with input value z of {valueTuple.inputZ}");
-            }
-
-            ResetWatch(watch);
-            Console.WriteLine();
+            return new List<(int, int)>();
         }
 
-        private void ResetWatch(Stopwatch watch)
-        {
-            //Console.WriteLine($"Time took: {watch.Elapsed.Minutes} min, {watch.Elapsed.Seconds} sec, {watch.Elapsed.Milliseconds} ms");
-            watch.Restart();
-        }
+        // Handle each input phase --------------------------------
 
         private Dictionary<int, Phase> ParsePhases(IReadOnlyList<string> content)
         {
@@ -213,60 +133,35 @@ namespace _2021_AoC
         /// </summary>
         internal class Phase
         {
-            private int SearchWidth
-            {
-                get
-                {
-                    if (Mod26) return SearchBase * 2;
-                    return SearchBase;
-                }
-            }
-
             private readonly List<string> _content;
-
-            private bool Mod26 { get; }
-
 
             public Phase(List<string> content)
             {
                 _content = content;
-
-                if (_content.Contains("mod x 26") && _content.Contains("div z 26"))
-                {
-                    // 
-                    Mod26 = true;
-                }
             }
 
-            public IEnumerable<(int inputDigit, int inputZ)> GetValidInputsWithAnyZ(int outputZ)
+            public IEnumerable<(int digit, int outputZ)> GetAllOutputsForZ(int inputZ, bool ascending)
             {
-                var concurrentCollection = new ConcurrentBag<(int inputDigit, int inputZ)>();
-
-                for (int i = 1; i < 10; i++)
+                if(ascending)
                 {
-                    //for (int localZ = 0; localZ < SearchWidth; localZ++)
-                    //{
-                    //    var result = OperateSingleSet(i, localZ, outputZ);
-                    //    temp.AddRange(result);
-                    //}
-
-                    Parallel.For(0, SearchWidth, localZ =>
+                    for (int i = 9; i > 0; i--)
                     {
-                        var resultList = OperateSingleSet(i, localZ, outputZ);
-                        foreach (var valueTuple in resultList)
-                        {
-                            concurrentCollection.Add(valueTuple);
-                        }
-                    });
+                        var z = CalculateOutputZ(i, inputZ);
+                        yield return (i, z);
+                    }
                 }
-
-                return concurrentCollection;
+                else
+                {
+                    for (int i = 1; i <= 9; i++)
+                    {
+                        var z = CalculateOutputZ(i, inputZ);
+                        yield return (i, z);
+                    }
+                }
             }
-
-            private IEnumerable<(int inputDigit, int inputZ)> OperateSingleSet(int inputDigit, int localZ, int goalOutputZ)
+            
+            private int CalculateOutputZ(int inputDigit, int inputZ)
             {
-                if (Mod26 && !HiddenFilterOk(localZ)) yield break;
-
                 Dictionary<char, int> dict = new()
                 {
                     { 'w', 0 },
@@ -274,23 +169,13 @@ namespace _2021_AoC
                     { 'y', 0 },
                     { 'z', 0 },
                 };
-                dict['z'] = localZ;
+                dict['z'] = inputZ;
                 foreach (var line in _content)
                 {
                     OperateSet(line, inputDigit, dict);
                 }
 
-                if (dict['z'] == goalOutputZ) yield return (inputDigit, localZ);
-            }
-
-            private bool HiddenFilterOk(int z)
-            {
-                if (z < 26) return true;
-
-                var mod = z % 26;
-                if (mod >= 7 && mod <= 20) return true;
-                return false;
-
+                return dict['z'];
             }
 
             private void OperateSet(string line, int input, Dictionary<char, int> dict)
@@ -356,144 +241,6 @@ namespace _2021_AoC
                     default: throw new ArgumentException("Wrong command", nameof(line));
                 }
             }
-        }
-
-        // https://stackoverflow.com/questions/228038/best-way-to-reverse-a-string
-        public string Reverse(string text)
-        {
-            if (text == null) return null;
-
-            // this was posted by petebob as well 
-            char[] array = text.ToCharArray();
-            Array.Reverse(array);
-            return new String(array);
-        }
-
-        private bool IsValid(long input)
-        {
-            Input = new Queue<int>();
-            Dict = new()
-            {
-                { 'w', 0 },
-                { 'x', 0 },
-                { 'y', 0 },
-                { 'z', 0 },
-            };
-
-            var s = Convert.ToString(input);
-            foreach (var c in s)
-            {
-                Input.Enqueue(int.Parse(c.ToString()));
-            }
-
-            foreach (var line in Content)
-            {
-                OperateSingleNumber(line);
-            }
-
-            var result = Dict['z'] == 0;
-            return result;
-        }
-
-        private bool DebugIsValid(long input)
-        {
-            Input = new Queue<int>();
-            Dict  = new()
-            {
-                { 'w', 0 },
-                { 'x', 0 },
-                { 'y', 0 },
-                { 'z', 0 },
-            };
-
-            var s = Convert.ToString(input);
-            foreach (var c in s)
-            {
-                Input.Enqueue(int.Parse(c.ToString()));
-            }
-
-            Console.WriteLine($"Testing input {input}");
-            foreach (var line in Content)
-            {
-                Console.Write($"{line,-10}");
-                Console.Write($"{OperateSingleNumber(line)}");
-                Console.Write(Environment.NewLine);
-            }
-
-            var result = Dict['z'] == 0;
-            Console.WriteLine($"Result: {result}");
-            return result;
-        }
-
-        private string OperateSingleNumber(string line)
-        {
-            var split = line.Split(' ');
-
-            var a = new Variable(split[1]);
-            Variable b = new Variable("0");
-            if (split.Length > 2)
-            {
-                b = new Variable(split[2]);
-            }
-
-            switch (split[0])
-            {
-                case "inp":
-                    Dict[a.Name] = Input.Dequeue();
-                    break;
-                case "add":
-                    if (b.IsDigit) Dict[a.Name] += b.Digit;
-                    else Dict[a.Name] += Dict[b.Name];
-                    break;
-                case "mul":
-                    if (b.IsDigit) Dict[a.Name] *= b.Digit;
-                    else Dict[a.Name] *= Dict[b.Name];
-                    break;
-                case "div":
-                    if (b.IsDigit)
-                    {
-                        if (b.Digit == 0) throw new DivideByZeroException();
-                        Dict[a.Name] /= b.Digit;
-                    }
-                    else
-                    {
-                        if (Dict[b.Name] == 0) throw new DivideByZeroException();
-                        Dict[a.Name] /= Dict[b.Name];
-                    }
-                    break;
-                case "mod":
-                    if (b.IsDigit)
-                    {
-                        if (Dict[a.Name] < 0 || b.Digit <= 0) throw new DivideByZeroException();
-                        Dict[a.Name] %= b.Digit;
-                    }
-                    else
-                    {
-                        if (Dict[a.Name] < 0 || Dict[b.Name] <= 0) throw new DivideByZeroException();
-                        Dict[a.Name] %= Dict[b.Name];
-                    }
-                    break;
-                case "eql":
-                    if (b.IsDigit)
-                    {
-                        if (Dict[a.Name] == b.Digit) Dict[a.Name] = 1;
-                        else Dict[a.Name] = 0;
-                    }
-                    else
-                    {
-                        if (Dict[a.Name] == Dict[b.Name]) Dict[a.Name] = 1;
-                        else Dict[a.Name] = 0;
-                    }
-                    break;
-                default: throw new ArgumentException("Wrong command", nameof(line));
-            }
-
-            return $"- Variable {a.Name} new value: {Dict[a.Name]}";
-        }
-
-        public override long SolveB()
-        {
-            return 0;
         }
 
         class Variable
