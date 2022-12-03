@@ -11,6 +11,10 @@ namespace _2021_AoC
     {
         public string DayNumber { get; }
         private List<string> _content { get; set; } = new List<string>();
+
+        /// <summary>
+        /// Challenge-specific input as list of string lines
+        /// </summary>
         public IReadOnlyList<string> Content => _content;
 
         protected DayBase(string dayNumberAsString)
@@ -54,7 +58,7 @@ namespace _2021_AoC
             return long.Parse(line);
         }
 
-        protected List<long> GetInputAsLongList()
+        protected IReadOnlyList<long> GetInputAsLongList()
         {
             return Content.Select(s => long.Parse(s)).ToList();
         }
@@ -64,7 +68,7 @@ namespace _2021_AoC
             return int.Parse(line);
         }
 
-        protected List<int> GetInputAsIntList()
+        protected IReadOnlyList<int> GetInputAsIntList()
         {
             return Content.Select(s => int.Parse(s)).ToList();
         }
@@ -80,7 +84,7 @@ namespace _2021_AoC
         /// o---------> X
         /// </summary>
         /// <returns></returns>
-        protected static char[,] ParseStringListToChar2D(List<string> list)
+        protected static char[,] ParseStringListToChar2D(IReadOnlyList<string> list)
         {
             var width = list.First().Length;
             var height = list.Count();
@@ -111,7 +115,7 @@ namespace _2021_AoC
         /// o---------> X
         /// </summary>
         /// <returns></returns>
-        protected static int[,] ParseStringListToInt2D(List<string> list)
+        protected static int[,] ParseStringListToInt2D(IReadOnlyList<string> list)
         {
             var width = list.First().Length;
             var height = list.Count();
