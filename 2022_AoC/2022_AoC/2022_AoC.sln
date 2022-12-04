@@ -3,7 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33103.184
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "2022_AoC", "2022_AoC\2022_AoC.csproj", "{89BC15A7-80F0-45DA-B78D-C83A7115E22E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "2022_AoC", "2022_AoC\2022_AoC.csproj", "{89BC15A7-80F0-45DA-B78D-C83A7115E22E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{98BB785A-0DB3-4D6C-B080-B0AA520D686A}"
+	ProjectSection(SolutionItems) = preProject
+		run_day.py = run_day.py
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
