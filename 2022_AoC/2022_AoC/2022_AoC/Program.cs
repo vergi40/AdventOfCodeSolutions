@@ -6,7 +6,7 @@
         {
             Console.WriteLine("Welcome to Advent of Code 2022 solutions");
 
-            var code = new Day03();
+            var code = new Day06();
             code.Initialize();
 
             Console.WriteLine($"Result a: " + code.SolveA());
