@@ -13,8 +13,120 @@ namespace _2022_AoC
 
             Visualize(graph);
 
+            var currentNode = graph["AA"];
+            var acc = 0;
+            for (int i = 0; i < 30; i++)
+            {
+                var message = $"Minute {i + 1}: ";
 
-            return 0;
+                // Sum up opened valves
+                acc += graph.Values.Where(n => n.Opened).Sum(n => n.FlowRate);
+                
+                var targetNode = SelectBest(graph, currentNode, i);
+                if (targetNode == null)
+                {
+                    // All opened already
+                    message += $"Total acc: {acc}";
+                    Console.WriteLine(message);
+                    continue;
+                }
+                else if (currentNode == targetNode)
+                {
+                    // 1. Already at valve -> open
+                    currentNode.Opened = true;
+                    message += $"Opening {currentNode}. ";
+                }
+                else
+                {
+                    // Route result: current + path
+                    var route = ShortestRouteTo(targetNode, new List<Node> { currentNode });
+
+                    // 2. Move to next
+                    var nextNode = route[1];
+                    message += $"Travelling to {nextNode}. ";
+                    currentNode = nextNode;
+                }
+
+                message += $"Total acc: {acc}";
+                Console.WriteLine(message);
+            }
+
+            return acc;
+        }
+
+        private Node? SelectBest(Dictionary<string, Node> graph, Node currentNode, int iteration)
+        {
+            // Naive
+            // * Select node that accumulates largest total value (minus the path it takes there)
+            var left = 30 - iteration;
+
+            var bestValue = 0;
+            Node? bestNode = null;
+            foreach (var node in graph.Values.Where(n => !n.Opened))
+            {
+                var distanceToTarget = ShortestDistanceTo(node, new List<Node> { currentNode });
+
+                // Weight. Could improve with some path eval
+                var total = node.FlowRate * left - distanceToTarget;
+                
+                if (total > bestValue)
+                {
+                    bestValue = total;
+                    bestNode = node;
+                }
+            }
+
+            return bestNode;
+        }
+
+        private List<Node> ShortestRouteTo(Node target, List<Node> travelled)
+        {
+            var current = travelled.Last();
+            var shortest = 100000;
+            var shortestRoute = new List<Node>();
+
+            foreach (var link in current.Links)
+            {
+                if (link == target)
+                {
+                    return new List<Node>(travelled) { link };
+                }
+                if (!travelled.Contains(link))
+                {
+                    var nextTravelled = new List<Node>(travelled) { link };
+
+                    var route = ShortestRouteTo(target, nextTravelled);
+                    if (!route.Any()) continue;
+                    if (route.Count < shortest)
+                    {
+                        shortest = route.Count;
+                        shortestRoute = route;
+                    }
+                }
+
+                // Else circular or dead end, continue
+            }
+            return shortestRoute;
+        }
+
+        private int ShortestDistanceTo(Node target, List<Node> travelled)
+        {
+            if (travelled.Last() == target) return 0;
+            var current = travelled.Last();
+            var shortest = 100000;
+
+            foreach (var link in current.Links)
+            {
+                if (link == target) return travelled.Count;
+                if (!travelled.Contains(link))
+                {
+                    var nextTravelled = new List<Node>(travelled) { link };
+
+                    var distance = ShortestDistanceTo(target, nextTravelled);
+                    if(distance < shortest) shortest = distance;
+                }
+            }
+            return shortest;
         }
 
         public override long SolveB()
@@ -99,7 +211,7 @@ namespace _2022_AoC
                 _valveData = valveData;
             }
 
-            public override string ToString() => $"{Name}: {FlowRate}. Visited: {Visited}";
+            public override string ToString() => $"{Name}: {FlowRate}";
 
             public void CreateLinks(IReadOnlyDictionary<string, Node> graph)
             {
