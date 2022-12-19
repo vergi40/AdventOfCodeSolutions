@@ -12,4 +12,8 @@
     <PackageReference Include="vergiCommon" Version="0.1.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Day16Helpers\" />
+  </ItemGroup>
+
 </Project>
