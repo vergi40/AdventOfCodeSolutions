@@ -10,8 +10,9 @@ namespace _2022_AoC
 
         public override long SolveA()
         {
-            var startNodeName = "AA";
-            var graph = GraphCreator.Create(ReadTestContent());
+            var (startNodeName, content) = ("AA", Content);
+            //var (startNodeName, content) = ("AA", ReadTestContent());
+            var graph = GraphCreator.Create(content);
             GraphCreator.Visualize(graph);
 
             var solver = new RouteSolver(graph, startNodeName);
@@ -19,13 +20,13 @@ namespace _2022_AoC
             var route = solver.Solve(startNodeName);
 
             var opened = new HashSet<Node>();
-
             var acc = 0;
+
             for (int i = 0; i < 30; i++)
             {
                 var message = $"Minute {i + 1}: ";
                 // Sum up opened valves
-                acc += graph.Values.Where(n => opened.Contains(n)).Sum(n => n.FlowRate);
+                acc += opened.Sum(n => n.FlowRate);
 
                 var (nextOperation, nextNode) = route[i];
                 if (nextOperation == StepType.Idle)
@@ -48,6 +49,7 @@ namespace _2022_AoC
                 Console.WriteLine(message);
             }
 
+            // 1195
             return acc;
         }
         
@@ -58,7 +60,7 @@ namespace _2022_AoC
         }
 
 
-        public enum StepType{OpenValve, MoveToNext, Idle}
+        public enum StepType{OpenValve, MoveToNext, Idle, DuplicateStart}
 
         public static class GraphCreator
         {
