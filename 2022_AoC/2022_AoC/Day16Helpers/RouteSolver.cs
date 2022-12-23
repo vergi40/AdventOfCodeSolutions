@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.IO;
 using static _2022_AoC.Day16;
 
 namespace _2022_AoC.Day16Helpers;
@@ -132,24 +133,25 @@ internal class RouteSolver
             allPossibilities.AddRange(routesList);
         }
 
-        foreach (var routeList in allPossibilities)
+        // Create every possible combination, compile and evaluate
+        for (int i = 0; i < allPossibilities.Count - 1; i++)
         {
-            if (!routeList.Any()) continue;
-            var path = CompilePath(routeList);
-            var eval = CalculateAccumulationForPath(path);
-            if (eval > max)
+            for (int j = i + 1; j < allPossibilities.Count; j++)
             {
-                max = eval;
-                best = path;
-            }
+                var routeA = allPossibilities[i];
+                var routeB = allPossibilities[j];
 
-            if (debugPrintAll)
-            {
-                debugList.Results.Add(path);
-                debugList.Evals.Add(eval);
+                var compiled = CompileDuoPath(routeA, routeB);
+                var eval = CalculateAccumulationForPath(compiled);
+
+                if (eval > max)
+                {
+                    max = eval;
+                    best = compiled;
+                }
             }
         }
-
+        
         Console.WriteLine($"Solve all combinations - stop. Time elapsed: {clock.Elapsed.ToString()}. Possibilities: {allPossibilities.Count}");
 
         if (debugPrintAll) debugList.Print();
@@ -267,6 +269,77 @@ internal class RouteSolver
         for (int i = 0; i < _timeLimit - operativeLength; i++)
         {
             result.Add(new RouteStep(StepType.Idle, lastNode));
+        }
+        return result;
+    }
+
+    private IReadOnlyList<RouteStep> CompileDuoPath(List<RouteData> subRoutes, List<RouteData> subRoutes2)
+    {
+        var compiled1 = CompilePath(subRoutes);
+        var compiled2 = CompilePath(subRoutes2);
+
+        var opened = new HashSet<Node>();
+        var result = new List<RouteStep>();
+        var iterA = 0;
+        var iterB = 0;
+
+        RouteStep stepA;
+        RouteStep stepB;
+        RouteStep resA;
+        RouteStep resB;
+        for (int i = 0; i < _timeLimit; i++)
+        {
+            if(iterA < compiled1.Count)
+            {
+                stepA = compiled1[iterA];
+                if (stepA.StepType == StepType.OpenValve)
+                {
+                    if (opened.Contains(stepA.Node))
+                    {
+                        iterA++;
+                    }
+                    else
+                    {
+                        opened.Add(stepA.Node);
+                    }
+                }
+            }
+            if(iterB < compiled2.Count)
+            {
+                stepB = compiled2[iterB];
+                if (stepB.StepType == StepType.OpenValve)
+                {
+                    if (opened.Contains(stepB.Node))
+                    {
+                        iterB++;
+                    }
+                    else
+                    {
+                        opened.Add(stepB.Node);
+                    }
+                }
+            }
+
+            if (iterA < compiled1.Count)
+            {
+                resA = compiled1[iterA];
+            }
+            else
+            {
+                resA = new RouteStep(StepType.Idle, compiled1.Last().Node);
+            }
+            if (iterB < compiled2.Count)
+            {
+                resB = compiled2[iterB];
+            }
+            else
+            {
+                resB = new RouteStep(StepType.Idle, compiled2.Last().Node);
+            }
+            result.Add(new RouteStep(resA.StepType, resA.Node, resB.StepType, resB.Node));
+
+            iterA++;
+            iterB++;
         }
         return result;
     }
