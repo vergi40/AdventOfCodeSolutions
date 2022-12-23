@@ -15,20 +15,21 @@ namespace _2022_AoC
             var graph = GraphCreator.Create(content);
             GraphCreator.Visualize(graph);
 
-            var solver = new RouteSolver(graph, startNodeName);
+            var timeLimit = 30;
+            var solver = new RouteSolver(graph, startNodeName, timeLimit);
             solver.GenerateRouteEvaluation();
             var route = solver.Solve(startNodeName);
 
             var opened = new HashSet<Node>();
             var acc = 0;
 
-            for (int i = 0; i < 30; i++)
+            for (int i = 0; i < timeLimit; i++)
             {
                 var message = $"Minute {i + 1}: ";
                 // Sum up opened valves
                 acc += opened.Sum(n => n.FlowRate);
 
-                var (nextOperation, nextNode) = route[i];
+                var (nextOperation, nextNode) = route[i].Single;
                 if (nextOperation == StepType.Idle)
                 {
                     // All opened already
@@ -49,15 +50,59 @@ namespace _2022_AoC
                 Console.WriteLine(message);
             }
 
-            // 1195
             return acc;
         }
         
 
         public override long SolveB()
         {
-            return 0;
+            //var (startNodeName, content) = ("AA", Content);
+            var (startNodeName, content) = ("AA", ReadTestContent());
+            var graph = GraphCreator.Create(content);
+            GraphCreator.Visualize(graph);
+
+            var timeLimit = 26;
+            var solver = new RouteSolver(graph, startNodeName, timeLimit);
+            solver.GenerateRouteEvaluation();
+            var duoRoute = solver.SolveDuo(startNodeName);
+
+            var opened = new HashSet<Node>();
+            var acc = 0;
+
+            for (int i = 0; i < timeLimit; i++)
+            {
+                var message = $"Minute {i + 1}: ";
+                // Sum up opened valves
+                acc += opened.Sum(n => n.FlowRate);
+
+                foreach (var nextStep in duoRoute[i].Iterate)
+                {
+                    var (nextOperation, nextNode) = nextStep;
+                    if (nextOperation == StepType.Idle)
+                    {
+                        // All opened already
+                    }
+                    else if (nextOperation == StepType.OpenValve)
+                    {
+                        // 1. Already at valve -> open
+                        opened.Add(nextNode);
+                        message += $"Opening {nextNode}. ";
+                    }
+                    else
+                    {
+                        // 2. Move to next
+                        message += $"Travelling to {nextNode}. ";
+                    }
+                }
+
+                message += $"Total acc: {acc}";
+                Console.WriteLine(message);
+            }
+
+            return acc;
         }
+
+
 
 
         public enum StepType{OpenValve, MoveToNext, Idle, DuplicateStart}

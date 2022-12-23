@@ -5,6 +5,7 @@ namespace _2022_AoC.Day16Helpers;
 
 internal class RouteSolver
 {
+    private readonly int _timeLimit;
     private string StartNodeName { get; }
     public IReadOnlyDictionary<string, Node> Graph { get; }
     public int ValveCount { get; }
@@ -14,8 +15,9 @@ internal class RouteSolver
     /// </summary>
     private Dictionary<Node, List<RouteData>> _routes = new();
 
-    public RouteSolver(IReadOnlyDictionary<string, Node> graph, string startNodeName)
+    public RouteSolver(IReadOnlyDictionary<string, Node> graph, string startNodeName, int timeLimit)
     {
+        _timeLimit = timeLimit;
         Graph = graph;
         var valves = graph.Values.Where(n => n.FlowRate > 0 || n.Name == startNodeName).ToList();
         ValveCount = valves.Count;
@@ -72,7 +74,7 @@ internal class RouteSolver
     /// </summary>
     /// <param name="startNode"></param>
     /// <returns></returns>
-    public IReadOnlyList<(StepType stepType, Node node)> Solve(string startNode, bool debugPrintAll = false)
+    public IReadOnlyList<RouteStep> Solve(string startNode, bool debugPrintAll = false)
     {
         // Try every combination
         Console.WriteLine($"Solve all combinations - start.");
@@ -80,7 +82,7 @@ internal class RouteSolver
 
         var debugList = new DebugHelper();
         var max = 0.0;
-        IReadOnlyList<(StepType, Node)> best = new List<(StepType, Node)>();
+        IReadOnlyList<RouteStep> best = new List<RouteStep>();
 
         var allPossibilities = new List<List<RouteData>>();
         foreach (var data in _routes[Graph[startNode]])
@@ -113,7 +115,48 @@ internal class RouteSolver
         return best;
     }
 
-    
+    public IReadOnlyList<RouteStep> SolveDuo(string startNode, bool debugPrintAll = false)
+    {
+        // Try every combination
+        Console.WriteLine($"Solve all combinations - start.");
+        var clock = Stopwatch.StartNew();
+
+        var debugList = new DebugHelper();
+        var max = 0.0;
+        IReadOnlyList<RouteStep> best = new List<RouteStep>();
+
+        var allPossibilities = new List<List<RouteData>>();
+        foreach (var data in _routes[Graph[startNode]])
+        {
+            var routesList = EnumerateAllRec(new List<RouteData> { data }, new HashSet<Node>());
+            allPossibilities.AddRange(routesList);
+        }
+
+        foreach (var routeList in allPossibilities)
+        {
+            if (!routeList.Any()) continue;
+            var path = CompilePath(routeList);
+            var eval = CalculateAccumulationForPath(path);
+            if (eval > max)
+            {
+                max = eval;
+                best = path;
+            }
+
+            if (debugPrintAll)
+            {
+                debugList.Results.Add(path);
+                debugList.Evals.Add(eval);
+            }
+        }
+
+        Console.WriteLine($"Solve all combinations - stop. Time elapsed: {clock.Elapsed.ToString()}. Possibilities: {allPossibilities.Count}");
+
+        if (debugPrintAll) debugList.Print();
+        return best;
+    }
+
+
     private List<List<RouteData>> EnumerateAllRec(List<RouteData> current, HashSet<Node> opened)
     {
         var result = new List<List<RouteData>>();
@@ -131,7 +174,7 @@ internal class RouteSolver
 
         foreach (var next in routesNotOpened)
         {
-            if (length + next.Length <= 30)
+            if (length + next.Length <= _timeLimit)
             {
                 var newOpened = new HashSet<Node>(opened);
                 newOpened.UnionWith(next.Valves);
@@ -144,35 +187,7 @@ internal class RouteSolver
         if(!result.Any()) result.Add(current);
         return result;
     }
-
-    private List<RouteData> SolveRec(List<RouteData> current, HashSet<Node> opened)
-    {
-        //
-        if (opened.Count == ValveCount)
-        {
-            return current;
-        }
-
-        var length = current.Sum(c => c.Length);
-        var last = current.Last().End;
-        var routesNotOpened = _routes[last]
-            .Where(r => !opened.Contains(r.End)).ToList();
-
-        foreach (var next in routesNotOpened)
-        {
-            if (length + next.Length <= 30)
-            {
-                var newOpened = new HashSet<Node>(opened);
-                newOpened.UnionWith(next.Valves);
-                var newList = new List<RouteData>(current){next};
-                return SolveRec(newList, newOpened);
-            }
-        }
-
-        // Couldn't find anything to add
-        return current;
-    }
-
+    
     /// <summary>
     /// Generate detailed routes. Open valve step only for last node
     /// </summary>
@@ -195,24 +210,6 @@ internal class RouteSolver
 
         _routes[rawRoute[0]].Add(new RouteData(route));
     }
-
-    public static double Evaluate(IReadOnlyList<(StepType, Node)> route)
-    {
-        // TODO naive
-        // TODO probably not needed at all if small data set
-        var sum = 0;
-        foreach (var (stepType, node) in route)
-        {
-            if (stepType == StepType.OpenValve)
-            {
-                sum += node.FlowRate;
-            }
-        }
-
-        // Standardize
-        return sum / (double)route.Count;
-    }
-
 
     // Algorithms
     private List<Node> ShortestRouteTo(Node target, List<Node> travelled)
@@ -247,30 +244,9 @@ internal class RouteSolver
         return shortestRoute;
     }
 
-    private int ShortestDistanceTo(Node target, List<Node> travelled)
+    private IReadOnlyList<RouteStep> CompilePath(List<RouteData> subRoutes)
     {
-        if (travelled.Last() == target) return 0;
-        var current = travelled.Last();
-        var shortest = 100000;
-
-        foreach (var link in current.Links)
-        {
-            if (link == target) return travelled.Count;
-            if (!travelled.Contains(link))
-            {
-                var nextTravelled = new List<Node>(travelled) { link };
-
-                var distance = ShortestDistanceTo(target, nextTravelled);
-                if (distance < shortest) shortest = distance;
-            }
-        }
-
-        return shortest;
-    }
-
-    private IReadOnlyList<(StepType, Node)> CompilePath(List<RouteData> subRoutes)
-    {
-        var result = new List<(StepType, Node)>();
+        var result = new List<RouteStep>();
         var opened = new HashSet<Node>();
         foreach (var routeData in subRoutes)
         {
@@ -282,35 +258,38 @@ internal class RouteSolver
                     if (opened.Contains(node)) continue;
                     else opened.Add(node);
                 }
-                result.Add((stepType, node));
+                result.Add(new RouteStep(stepType, node));
             }
         }
 
         var operativeLength = result.Count;
-        var lastNode = result.Last().Item2;
-        for (int i = 0; i < 30 - operativeLength; i++)
+        var lastNode = result.Last().Node;
+        for (int i = 0; i < _timeLimit - operativeLength; i++)
         {
-            result.Add((StepType.Idle, lastNode));
+            result.Add(new RouteStep(StepType.Idle, lastNode));
         }
         return result;
     }
 
-    private int CalculateAccumulationForPath(IReadOnlyList<(StepType, Node)> path)
+    private int CalculateAccumulationForPath(IReadOnlyList<RouteStep> path)
     {
         // Same as SolveA but without logging
         var opened = new HashSet<Node>();
 
         var acc = 0;
-        for (int i = 0; i < 30; i++)
+        for (int i = 0; i < _timeLimit; i++)
         {
             // Sum up opened valves
             acc += opened.Sum(n => n.FlowRate);
 
-            var (nextOperation, nextNode) = path[i];
-            if (nextOperation == StepType.OpenValve)
+            foreach (var nextStep in path[i].Iterate)
             {
-                // 1. Already at valve -> open
-                opened.Add(nextNode);
+                var (nextOperation, nextNode) = nextStep;
+                if (nextOperation == StepType.OpenValve)
+                {
+                    // 1. Already at valve -> open
+                    opened.Add(nextNode);
+                }
             }
         }
 
@@ -319,7 +298,7 @@ internal class RouteSolver
 
     class DebugHelper
     {
-        public List<IReadOnlyList<(StepType stepType, Node node)>> Results { get; } = new();
+        public List<IReadOnlyList<RouteStep>> Results { get; } = new();
         public List<double> Evals { get; } = new();
 
         public void Print()
@@ -331,9 +310,9 @@ internal class RouteSolver
             }
         }
 
-        private string PrintPath(IReadOnlyList<(StepType stepType, Node node)> path)
+        private string PrintPath(IReadOnlyList<RouteStep> path)
         {
-            return String.Join(", ", path.Select(p => p.node).Select(n => n.Name));
+            return String.Join(", ", path.Select(p => p.Node).Select(n => n.Name));
         }
     }
 

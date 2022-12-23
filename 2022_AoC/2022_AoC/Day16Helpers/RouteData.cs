@@ -12,8 +12,6 @@ internal class RouteData
     /// </summary>
     public int Length { get; }
 
-    public double Evaluation { get; set; }
-
     /// <summary>
     /// Nodes in path that stop to open valve.
     /// </summary>
@@ -27,11 +25,41 @@ internal class RouteData
         Length = route.Count -1;
 
         Valves = route.Where(n => n.Item1 == Day16.StepType.OpenValve).Select(n => n.Item2).ToHashSet();
-        Evaluation = RouteSolver.Evaluate(route);
     }
 
     public override string ToString()
     {
-        return $"{Start.Name} -> {End.Name}, l:{Length}, e:{Evaluation:F2}";
+        return $"{Start.Name} -> {End.Name}, l:{Length}";
     }
+}
+
+internal class RouteStep
+{
+    public Node Node { get; }
+    public Day16.StepType StepType { get; }
+
+    public Node Node2 { get; }
+    public Day16.StepType StepType2 { get; }
+
+    public (Day16.StepType, Node) Single => (StepType, Node);
+    public List<(Day16.StepType, Node)> Iterate => new List<(Day16.StepType, Node)>() { (StepType, Node), (StepType2, Node2) };
+
+    public RouteStep(Day16.StepType stepType, Node node)
+    {
+        StepType = stepType;
+        Node = node;
+
+        StepType2 = stepType;
+        Node2 = node;
+    }
+
+    public RouteStep(Day16.StepType stepType, Node node, Day16.StepType stepType2, Node node2)
+    {
+        StepType = stepType;
+        Node = node;
+
+        StepType2 = stepType2;
+        Node2 = node2;
+    }
+
 }
