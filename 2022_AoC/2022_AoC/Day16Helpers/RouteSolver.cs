@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.IO;
 using static _2022_AoC.Day16;
 
 namespace _2022_AoC.Day16Helpers;
@@ -133,26 +132,48 @@ internal class RouteSolver
             allPossibilities.AddRange(routesList);
         }
 
+        Console.WriteLine($"Time elapsed: {clock.Elapsed.ToString()}. " +
+                          $"Single path possibilities: {allPossibilities.Count}");
+        clock.Restart();
+
+        Console.WriteLine($"Estimated possibility count: {Math.Pow(allPossibilities.Count, 2)}");
+        var iter = 0;
         // Create every possible combination, compile and evaluate
         for (int i = 0; i < allPossibilities.Count - 1; i++)
         {
+            var routeA = allPossibilities[i];
+
+            // Find all diverging routes
+            var openedA = routeA.Select(r => r.Valve).ToList();
+
             for (int j = i + 1; j < allPossibilities.Count; j++)
             {
-                var routeA = allPossibilities[i];
                 var routeB = allPossibilities[j];
-
-                var compiled = CompileDuoPath(routeA, routeB);
-                var eval = CalculateAccumulationForPath(compiled);
-
-                if (eval > max)
+                var openedB = routeB.Select(r => r.Valve).ToList();
+                if (openedA[0] != openedB[0])
                 {
-                    max = eval;
-                    best = compiled;
+                    // Only compile paths that have different opened valves
+                    var compiled = CompileDuoPath(routeA, routeB);
+                    var eval = CalculateAccumulationForPath(compiled);
+
+                    if (eval > max)
+                    {
+                        max = eval;
+                        best = compiled;
+                    }
                 }
+
+                if (iter % 1_000_000 == 0)
+                {
+                    Console.WriteLine($"{iter} iterated. Elapsed: {clock.Elapsed.ToString()}. Max: {max}. ");
+                }
+
+                iter++;
             }
         }
-        
-        Console.WriteLine($"Solve all combinations - stop. Time elapsed: {clock.Elapsed.ToString()}. Possibilities: {allPossibilities.Count}");
+
+        Console.WriteLine($"Solve all combinations - stop. Time elapsed: {clock.Elapsed.ToString()}. " +
+                          $"Duo path possibilities: {allPossibilities.Count}");
 
         if (debugPrintAll) debugList.Print();
         return best;

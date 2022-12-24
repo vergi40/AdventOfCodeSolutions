@@ -17,6 +17,8 @@ internal class RouteData
     /// </summary>
     public HashSet<Node> Valves { get; }
 
+    public Node Valve { get; }
+
     public RouteData(IReadOnlyList<(Day16.StepType, Node)> route)
     {
         Route = route;
@@ -25,6 +27,7 @@ internal class RouteData
         Length = route.Count -1;
 
         Valves = route.Where(n => n.Item1 == Day16.StepType.OpenValve).Select(n => n.Item2).ToHashSet();
+        Valve = Valves.Single();
     }
 
     public override string ToString()
