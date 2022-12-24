@@ -137,12 +137,49 @@ internal class RouteSolver
         clock.Restart();
 
         Console.WriteLine($"Estimated possibility count: {Math.Pow(allPossibilities.Count, 2)}");
+
+        var allVariations = new List<List<RouteData>>();
+        foreach (var possibility in allPossibilities)
+        {
+            foreach (var variation in CreateRouteVariations(possibility))
+            {
+                allVariations.Add(variation);
+            }
+        }
+
+
         var iter = 0;
+        var iterA = 0;
+
+        // Find all variation pairs that don't have overlapping valves
+        List<(List<RouteData>, List<RouteData>)> pairs = new();
+        for (int i = 0; i < allVariations.Count - 1; i++)
+        {
+            //
+            var routeA = allVariations[i];
+            var openedA = routeA.Select(r => r.Valve).ToHashSet();
+
+            for (int j = i + 1; j < allVariations.Count; j++)
+            {
+                iterA++;
+                var routeB = allVariations[j];
+                var openedB = routeB.Select(r => r.Valve).ToHashSet();
+
+                if (!openedA.Overlaps(openedB))
+                {
+                    pairs.Add((routeA, routeB));
+                }
+            }
+        }
+
+        Console.WriteLine($"Total pair count: {pairs.Count}. Elapsed: {clock.Elapsed.ToString()}");
+
         // Create every possible combination, compile and evaluate
         for (int i = 0; i < allPossibilities.Count - 1; i++)
         {
             var routeA = allPossibilities[i];
-
+            var variations = CreateRouteVariations(routeA);
+            
             // Find all diverging routes
             var openedA = routeA.Select(r => r.Valve).ToList();
 
@@ -179,6 +216,24 @@ internal class RouteSolver
         return best;
     }
 
+    private List<List<RouteData>> CreateRouteVariations(List<RouteData> original)
+    {
+        List<List<RouteData>> result = new List<List<RouteData>>();
+        var stack = new Stack<RouteData>();
+        foreach (var data in original)
+        {
+            stack.Push(data);
+        }
+
+        // TODO try first with smaller count
+        while (stack.Count > 2)
+        {
+            result.Add(stack.ToList());
+            stack.Pop();
+        }
+
+        return result;
+    }
 
     private List<List<RouteData>> EnumerateAllRec(List<RouteData> current, HashSet<Node> opened)
     {
