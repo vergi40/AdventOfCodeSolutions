@@ -22,6 +22,10 @@ namespace _2021_AoC
             DayNumber = dayNumberAsString;
         }
 
+        /// <summary>
+        /// Read input data to <see cref="Content"/>. If other initializations needed before
+        /// solving, you can override <see cref="InitializeChild"/>
+        /// </summary>
         public void Initialize()
         {
             InitializeBase();
@@ -37,6 +41,13 @@ namespace _2021_AoC
         protected virtual void InitializeChild()
         {
             // Override if needed
+        }
+
+        public IReadOnlyList<string> ReadTestContent()
+        {
+            var fileName = $"{DayNumber}-test";
+            var content = Files.GetInputData(fileName);
+            return content ?? throw new ArgumentException($"No input data file found: {fileName}");
         }
 
         public abstract long SolveA();
