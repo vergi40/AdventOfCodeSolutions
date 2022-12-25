@@ -162,55 +162,45 @@ internal class RouteSolver
             for (int j = i + 1; j < allVariations.Count; j++)
             {
                 iterA++;
+                if (iterA % 1_000_000 == 0)
+                {
+                    Console.WriteLine($"{iter} iterated. Elapsed: {clock.Elapsed.ToString()}. Pairs: {pairs.Count}. ");
+                }
+
                 var routeB = allVariations[j];
                 var openedB = routeB.Select(r => r.Valve).ToHashSet();
 
-                if (!openedA.Overlaps(openedB))
+                if (openedA.Count + openedB.Count == ValveCount && !openedA.Overlaps(openedB))
                 {
                     pairs.Add((routeA, routeB));
+
+                    // TODO only 1 pair
+                    allVariations.RemoveAt(i);
+                    i--;
+                    break;
                 }
             }
+
+            // TODO DEBUG
+            if (pairs.Count > 3000) break;
         }
 
         Console.WriteLine($"Total pair count: {pairs.Count}. Elapsed: {clock.Elapsed.ToString()}");
 
-        // Create every possible combination, compile and evaluate
-        for (int i = 0; i < allPossibilities.Count - 1; i++)
+        foreach (var pair in pairs)
         {
-            var routeA = allPossibilities[i];
-            var variations = CreateRouteVariations(routeA);
-            
-            // Find all diverging routes
-            var openedA = routeA.Select(r => r.Valve).ToList();
+            // Only compile paths that have different opened valves
+            var compiled = CompileDuoPath(pair.Item1, pair.Item2);
+            var eval = CalculateAccumulationForPath(compiled);
 
-            for (int j = i + 1; j < allPossibilities.Count; j++)
+            if (eval > max)
             {
-                var routeB = allPossibilities[j];
-                var openedB = routeB.Select(r => r.Valve).ToList();
-                if (openedA[0] != openedB[0])
-                {
-                    // Only compile paths that have different opened valves
-                    var compiled = CompileDuoPath(routeA, routeB);
-                    var eval = CalculateAccumulationForPath(compiled);
-
-                    if (eval > max)
-                    {
-                        max = eval;
-                        best = compiled;
-                    }
-                }
-
-                if (iter % 1_000_000 == 0)
-                {
-                    Console.WriteLine($"{iter} iterated. Elapsed: {clock.Elapsed.ToString()}. Max: {max}. ");
-                }
-
-                iter++;
+                max = eval;
+                best = compiled;
             }
         }
-
-        Console.WriteLine($"Solve all combinations - stop. Time elapsed: {clock.Elapsed.ToString()}. " +
-                          $"Duo path possibilities: {allPossibilities.Count}");
+        
+        Console.WriteLine($"Solve - stop. Time elapsed: {clock.Elapsed.ToString()}");
 
         if (debugPrintAll) debugList.Print();
         return best;
