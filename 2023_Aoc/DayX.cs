@@ -1,12 +1,9 @@
 namespace _2023_Aoc
 {
-    public class DayX
+    public class DayX : DayBase
     {
-        [SetUp]
-        public void Setup()
-        {
-        }
-
+        protected override string DayNumber { get; set; } = "xx";
+        
         [Test]
         public void Test1()
         {
