@@ -47,6 +47,41 @@ namespace _2023_Aoc
             Assert.That(sum, Is.EqualTo(1931));
         }
 
+        [Test]
+        public void Test2()
+        {
+            var sum = 0;
+            foreach (var line in Input)
+            {
+                var maxCounts = new Dictionary<Color, int>
+                {
+                    { Color.Red, 0 }, { Color.Green, 0 }, { Color.Blue, 0 }
+                };
+
+                var split = line.Split(':');
+                var (_, actions) = (split[0], split[1]);
+
+                var allPicksInGame = actions.Split(';');
+                foreach (var pick in allPicksInGame)
+                {
+                    var colors = pick.Split(',');
+                    foreach (var colorString in colors)
+                    {
+                        // If greater than maxCount, increase maxCount
+                        var (color, count) = ParseColor(colorString);
+                        if (count > maxCounts[color])
+                        {
+                            maxCounts[color] = count;
+                        }
+                    }
+                }
+
+                sum += maxCounts[Color.Red] * maxCounts[Color.Green] * maxCounts[Color.Blue];
+            }
+
+            Assert.That(sum, Is.EqualTo(83105));
+        }
+
         private enum Color{Red, Green, Blue};
 
         private (Color color, int count) ParseColor(string input)
