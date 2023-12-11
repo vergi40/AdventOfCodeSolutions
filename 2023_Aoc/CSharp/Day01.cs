@@ -1,27 +1,16 @@
-using vergiCommon;
-
-namespace _2023_Aoc
+namespace CSharp
 {
-    public class Day01
+    public class Day01 : DayBase
     {
         // For input automation: 
         // https://adventofcode.com/2023/day/1/input
 
-        [SetUp]
-        public void Setup()
-        {
-        }
 
-        private IReadOnlyList<string> GetInput()
-        {
-            var fileName = Path.Combine(GetPath.ThisProject(), "Input", "01.txt");
-            return File.ReadAllLines(fileName);
-        }
 
         [Test]
         public void Test1()
         {
-            var input = GetInput();
+            var input = Input;
 
             var sum = 0;
             foreach (var line in input)
@@ -39,7 +28,7 @@ namespace _2023_Aoc
         [Test]
         public void Test2()
         {
-            var input = GetInput();
+            var input = Input;
 
             var sum = 0;
             foreach (var line in ConvertLetters(input))
@@ -93,5 +82,7 @@ namespace _2023_Aoc
                 yield return res;
             }
         }
+
+        protected override string DayNumber { get; set; } = "01";
     }
 }

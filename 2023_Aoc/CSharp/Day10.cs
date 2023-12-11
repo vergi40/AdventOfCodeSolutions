@@ -1,4 +1,4 @@
-namespace _2023_Aoc
+namespace CSharp
 {
     public class Day10 : DayBase
     {
