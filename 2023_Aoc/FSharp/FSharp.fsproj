@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="Day01FirstVersion.fs" />
     <Compile Include="Utils.fs" />
     <Compile Include="Day01.fs" />
     <Compile Include="Program.fs" />
@@ -20,7 +21,6 @@
     <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
     <PackageReference Include="NUnit.Analyzers" Version="3.6.1" />
     <PackageReference Include="coverlet.collector" Version="6.0.0" />
-    <PackageReference Include="vergiCommon" Version="0.2.2" />
   </ItemGroup>
 
 </Project>
