@@ -15,7 +15,7 @@ let Setup () =
 // Explanation for head::tail https://thinkfunctionally.hashnode.dev/recursive-functions-in-f-sharp
 [<Test>]
 let A () =
-    let input = Utils.GetInput("01")
+    let input = Utils.GetInput "01"
 
     let isNumber (c: char) = Char.IsDigit c
     //let parseNumber (c: char) = Int32.Parse(c.ToString())
