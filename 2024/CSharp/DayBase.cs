@@ -17,7 +17,7 @@ namespace CSharp
             if (DayNumber.Length == 1)
                 throw new InvalidOperationException("Please override DayNumber with 2 char number. E.g. 01");
 
-            var fileName = Path.Combine(GetPath.ThisProject(), "../", "Input", $"{DayNumber}.txt");
+            var fileName = Path.Combine(GetPath.ThisProject(), "..", "..", "Input", "2024", $"{DayNumber}.txt");
             Input = File.ReadAllLines(fileName);
         }
     }
