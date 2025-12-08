@@ -25,6 +25,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2025", "2025", "{9D4FE2E2-C
 		Input\2025\01.txt = Input\2025\01.txt
 		Input\2025\03.txt = Input\2025\03.txt
 		Input\2025\06.txt = Input\2025\06.txt
+		Input\2025\07.txt = Input\2025\07.txt
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2025", "2025", "{98CA3797-4094-403C-9ADD-D969B39919E9}"
